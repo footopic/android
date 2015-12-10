@@ -22,5 +22,12 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:support-v4:+'
+
+    compile 'com.google.android.gms:play-services-plus:+'
+    compile 'com.google.apis:google-api-services-oauth2:+'
+    compile 'com.google.apis:google-api-services-plus:+'
+    compile 'com.google.api-client:google-api-client:+'
+    compile 'com.google.api-client:google-api-client-android:+'
 }
