@@ -52,7 +52,7 @@ captures/
 app/build/
 
 # key
-./don.jks
+/don.jks
 
 # secret key
 client_secret.json
