@@ -50,3 +50,9 @@ captures/
 .idea/libraries/
 /.idea/libraries
 app/build/
+
+# key
+./don.jks
+
+# secret key
+client_secret.json
