@@ -29,6 +29,7 @@ import jp.ac.dendai.im.cps.footopic.util.HttpPostTask;
 
 public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTouchListener {
     private Activity mActivity = null;
+    private OnRecyclerFragmentInteractionListener mListener;
     private View mView;
 
     // RecyclerView, Adapter
@@ -40,7 +41,13 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        mActivity = activity;
+        try {
+            mActivity = activity;
+            mListener = (OnRecyclerFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Nullable
@@ -116,6 +123,14 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
     }
 
     /**
+     *
+     */
+    public interface OnRecyclerFragmentInteractionListener {
+        // TODO: Update argument type and name
+        public void onRecyclerFragmentInteraction(int position, MotionEvent e);
+    }
+
+    /**
      * ListItemのクリック処理
      * TODO: 透明になって戻らないことがある
      */
@@ -133,6 +148,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
             Log.d("RecyclerFragment", "SingleTap position " + position);
 
             // handle single tap
+            mListener.onRecyclerFragmentInteraction(position, e);
 
             return super.onSingleTapConfirmed(e);
         }

@@ -36,12 +36,21 @@ public class DonFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-//        return 1;
         return 2;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Articles";
+        switch (position) {
+            case 0: {
+                return "recent";
+            }
+            case 1: {
+                return "tag";
+            }
+            default: {
+                return "Page" + position;
+            }
+        }
     }
 }

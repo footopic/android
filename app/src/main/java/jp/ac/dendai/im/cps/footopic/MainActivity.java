@@ -1,17 +1,14 @@
 package jp.ac.dendai.im.cps.footopic;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.util.Log;
+import android.view.MotionEvent;
 
-import com.astuetz.PagerSlidingTabStrip;
-
-import jp.ac.dendai.im.cps.footopic.adapter.DonFragmentPagerAdapter;
-import jp.ac.dendai.im.cps.footopic.util.App;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        ArticleListFragment.OnArticleListFragmentInteractionListener, RecyclerFragment.OnRecyclerFragmentInteractionListener {
 
     private static final String TAG = "Don";
 
@@ -22,18 +19,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        App.setActivity(this);
-
         manager = getSupportFragmentManager();
 
-        initPager();
-    }
+        manager.beginTransaction()
+                .replace(R.id.container, ArticleListFragment.newInstance(manager))
+                .commit();
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_auth: {
-            }
-        }
     }
 
     @Override
@@ -46,13 +37,13 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private void initPager() {
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+    @Override
+    public void onArticleListFragmentInteraction(Uri uri) {
 
-        final DonFragmentPagerAdapter adapter = new DonFragmentPagerAdapter(manager);
-        viewPager.setAdapter(adapter);
+    }
 
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tab_strip);
-        tabs.setViewPager(viewPager);
+    @Override
+    public void onRecyclerFragmentInteraction(int position, MotionEvent e) {
+        Log.d(TAG, "MainActivity onRecycler position: " + position + "\nMotion: " + e.toString());
     }
 }
