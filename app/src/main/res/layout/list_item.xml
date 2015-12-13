@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/list_item_padding" android:paddingBottom="@dimen/list_item_padding"
+    android:layout_height="wrap_content" android:layout_width="wrap_content" >
+
+    <ImageView
+        android:layout_width="@dimen/thumb_size"
+        android:layout_height="@dimen/thumb_size"
+        android:id="@+id/thumb"
+        android:scaleType="fitXY"
+        android:layout_marginRight="@dimen/thumb_margin"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/thumb">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small_size"
+            android:text="New Text"
+            android:id="@+id/name_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_large_size"
+            android:text="New Text"
+            android:textColor="@color/black"
+            android:id="@+id/title_text" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small_size"
+            android:text="New Text"
+            android:id="@+id/tags_text" />
+
+    </LinearLayout>
+
+</LinearLayout>
