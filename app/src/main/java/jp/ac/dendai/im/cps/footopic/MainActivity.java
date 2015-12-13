@@ -2,10 +2,12 @@ package jp.ac.dendai.im.cps.footopic;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
+
+import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
 
 public class MainActivity extends AppCompatActivity implements
         ArticleListFragment.OnArticleListFragmentInteractionListener, RecyclerFragment.OnRecyclerFragmentInteractionListener {
@@ -24,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements
         manager.beginTransaction()
                 .replace(R.id.container, ArticleListFragment.newInstance(manager))
                 .commit();
-
     }
 
     @Override
@@ -43,7 +44,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRecyclerFragmentInteraction(int position, MotionEvent e) {
-        Log.d(TAG, "MainActivity onRecycler position: " + position + "\nMotion: " + e.toString());
+    public void onRecyclerFragmentInteraction(int position, ArticleBean article) {
+        Log.d(TAG, "MainActivity onRecycler position: " + position);
+
+        fragmentReplace(ArticleFragment.newInstance(article));
+    }
+
+    public void fragmentReplace(Fragment fragment) {
+        manager.beginTransaction()
+                .add(R.id.container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
