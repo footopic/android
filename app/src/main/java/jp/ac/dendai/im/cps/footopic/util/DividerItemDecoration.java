@@ -10,6 +10,7 @@ import android.view.View;
 
 /**
  * Created by naoya on 15/12/12.
+ * RecyclerViewの行間の線の表示
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 

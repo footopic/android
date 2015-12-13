@@ -5,6 +5,7 @@ import jp.ac.dendai.im.cps.footopic.util.App;
 
 /**
  * Created by naoya on 15/12/12.
+ * サムネイルの画像のURLの構造
  */
 public class ImageBean {
     private String url;

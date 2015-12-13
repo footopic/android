@@ -22,12 +22,12 @@ public abstract class HttpPostHandler extends Handler{
         }
     }
 
-    /*
+    /**
      * 通信成功時の処理
      */
     public abstract void onPostCompleted(String response);
 
-    /*
+    /**
      * 通信失敗時の処理を記述
      */
     public abstract void onPostFailed(String response);

@@ -2,6 +2,7 @@ package jp.ac.dendai.im.cps.footopic;
 
 /**
  * Created by naoya on 15/12/12.
+ * HTTP通信の種類
  */
 public enum HttpType {
     Post ( 1 ),

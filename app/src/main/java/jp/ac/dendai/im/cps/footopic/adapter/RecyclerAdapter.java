@@ -18,6 +18,7 @@ import jp.ac.dendai.im.cps.footopic.bean.UserBean;
 
 /**
  * Created by naoya on 15/12/11.
+ * RecyclerViewのアダプター
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
@@ -72,7 +73,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-    // ViewHolder(固有ならインナークラスでOK)
+    /**
+     * ViewHolder
+     * ItemのViewは固定なのでインナークラス
+     */
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView thumb;
         TextView name;

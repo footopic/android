@@ -11,4 +11,7 @@
     <string name="url_users">http://staging.don.cps.im.dendai.ac.jp:80/api/v1/users.json</string>
     <string name="url_user_show">http://staging.don.cps.im.dendai.ac.jp:80/api/v1/users/show.json</string>
     <string name="url_templates">http://staging.don.cps.im.dendai.ac.jp:80/api/v1/templates.json</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

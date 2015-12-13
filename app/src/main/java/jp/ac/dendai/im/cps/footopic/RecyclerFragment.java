@@ -115,6 +115,10 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
 
     }
 
+    /**
+     * ListItemのクリック処理
+     * TODO: 透明になって戻らないことがある
+     */
     private class RecyclerViewOnGestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
