@@ -2,6 +2,7 @@ package jp.ac.dendai.im.cps.footopic.bean;
 
 /**
  * Created by naoya on 15/12/11.
+ * Articleの構造
  */
 public class ArticleBean {
     private int id;

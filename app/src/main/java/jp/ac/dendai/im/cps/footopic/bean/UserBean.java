@@ -2,6 +2,7 @@ package jp.ac.dendai.im.cps.footopic.bean;
 
 /**
  * Created by naoya on 15/12/11.
+ * Userの構造
  */
 public class UserBean {
     private int id;

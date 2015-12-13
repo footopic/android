@@ -58,6 +58,12 @@ public class HttpPostTask extends AsyncTask<Void, Integer, Void> {
 
     private HttpType requestType;
 
+    /**
+     * 非同期通信で送るリクエストの作成
+     * @param post_url
+     * @param ui_handler
+     * @param type
+     */
     public HttpPostTask(String post_url, Handler ui_handler, HttpType type) {
         this.post_url = post_url;
         this.ui_hander = ui_handler;

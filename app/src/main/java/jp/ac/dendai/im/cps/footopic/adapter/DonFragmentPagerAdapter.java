@@ -8,6 +8,7 @@ import jp.ac.dendai.im.cps.footopic.RecyclerFragment;
 
 /**
  * Created by naoya on 15/12/11.
+ * TopページPagerのアダプター
  */
 public class DonFragmentPagerAdapter extends FragmentPagerAdapter {
 
