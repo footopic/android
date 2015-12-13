@@ -142,11 +142,11 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
             View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
             int position = mRecyclerView.getChildAdapterPosition(view);
 
+            Log.d("RecyclerFragment", "SingleTap position " + position);
+
             if (position == -1) {
                 return false;
             }
-
-            Log.d("RecyclerFragment", "SingleTap position " + position);
 
             // handle single tap
             mListener.onRecyclerFragmentInteraction(position, articles.get(position));
@@ -156,10 +156,10 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            Log.d("RecyclerFragment", "onSingleTapUp");
-
             View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
             int position = mRecyclerView.getChildAdapterPosition(view);
+
+            Log.d("RecyclerFragment", "SingleTapUp position " + position);
 
             if (position == -1) {
                 return false;
@@ -171,10 +171,10 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
 
         @Override
         public boolean onDown(MotionEvent e) {
-            Log.d("RecyclerFragment", "onDown");
-
             View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
             int position = mRecyclerView.getChildAdapterPosition(view);
+
+            Log.d("RecyclerFragment", "Down position " + position);
 
             if (position == -1) {
                 return false;
@@ -190,13 +190,13 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
             View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
             int position = mRecyclerView.getChildAdapterPosition(view);
 
+            Log.d("RecyclerFragment", "LongPress position " + position);
+
             if (position == -1) {
                 return;
             }
 
             view.setAlpha(1.0f);
-
-            Log.d("RecyclerFragment", "LongTap position " + position);
 
             // handle long press
 
@@ -209,6 +209,8 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
             View view = mRecyclerView.findChildViewUnder(e1.getX(), e1.getY());
             int position = mRecyclerView.getChildAdapterPosition(view);
 
+            Log.d("RecyclerFragment", "onScroll position " + position);
+
             if (position == -1) {
                 return false;
             }
@@ -219,34 +221,19 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-//            View view = mRecyclerView.findChildViewUnder(e1.getX(), e1.getY());
-//            int position = mRecyclerView.getChildAdapterPosition(view);
-//
-//            if (position == -1) {
-//                return false;
-//            }
-//
-//            view.setAlpha(1.0f);
             return false;
         }
 
         @Override
         public void onShowPress(MotionEvent e) {
-//            View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-//            int position = mRecyclerView.getChildAdapterPosition(view);
-//
-//            if (position == -1) {
-//                return;
-//            }
-//
-//            view.setAlpha(1.0f);
         }
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
             int position = mRecyclerView.getChildAdapterPosition(view);
+
+            Log.d("RecyclerFragment", "DoubleTap position " + position);
 
             if (position == -1) {
                 return false;
@@ -261,6 +248,8 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
             View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
             int position = mRecyclerView.getChildAdapterPosition(view);
 
+            Log.d("RecyclerFragment", "DoubleTapEvent position " + position);
+
             if (position == -1) {
                 return false;
             }
@@ -271,14 +260,6 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
 
         @Override
         public boolean onContextClick(MotionEvent e) {
-//            View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-//            int position = mRecyclerView.getChildAdapterPosition(view);
-//
-//            if (position == -1) {
-//                return false;
-//            }
-//
-//            view.setAlpha(1.0f);
             return false;
         }
     }
