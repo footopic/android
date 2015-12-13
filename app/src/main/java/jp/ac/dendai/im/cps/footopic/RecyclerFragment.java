@@ -31,6 +31,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
     private Activity mActivity = null;
     private OnRecyclerFragmentInteractionListener mListener;
     private View mView;
+    private ArrayList<ArticleBean> articles;
 
     // RecyclerView, Adapter
     private RecyclerView mRecyclerView = null;
@@ -79,7 +80,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
 
                 ObjectMapper mapper = new ObjectMapper();
                 try {
-                    ArrayList<ArticleBean> articles = new ObjectMapper().readValue(response, new TypeReference<List<ArticleBean>>() {});
+                    articles = new ObjectMapper().readValue(response, new TypeReference<List<ArticleBean>>() {});
                     // ListViewと同じ
                     mRecyclerAdapter = new RecyclerAdapter(mActivity, articles);
                     mRecyclerView.setAdapter(mRecyclerAdapter);
@@ -127,7 +128,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
      */
     public interface OnRecyclerFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onRecyclerFragmentInteraction(int position, MotionEvent e);
+        public void onRecyclerFragmentInteraction(int position, ArticleBean article);
     }
 
     /**
@@ -148,7 +149,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
             Log.d("RecyclerFragment", "SingleTap position " + position);
 
             // handle single tap
-            mListener.onRecyclerFragmentInteraction(position, e);
+            mListener.onRecyclerFragmentInteraction(position, articles.get(position));
 
             return super.onSingleTapConfirmed(e);
         }

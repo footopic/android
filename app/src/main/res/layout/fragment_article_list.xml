@@ -14,7 +14,7 @@
         app:pstsShouldExpand="true"
         app:pstsDividerColor="@android:color/transparent"
         app:pstsIndicatorHeight="2dp"
-        app:pstsIndicatorColor="@color/pager_underline_color"
+        app:pstsIndicatorColor="@color/theme_color"
         app:pstsTabBackground="@android:color/transparent"
         app:pstsUnderlineHeight="2dp"
         app:pstsUnderlineColor="@color/pager_color" />
