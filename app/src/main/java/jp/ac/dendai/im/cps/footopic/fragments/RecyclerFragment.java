@@ -21,15 +21,13 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jp.ac.dendai.im.cps.footopic.R;
 import jp.ac.dendai.im.cps.footopic.adapters.RecyclerAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.listeners.BottomLoadListener;
-import jp.ac.dendai.im.cps.footopic.network.HttpRequest;
+import jp.ac.dendai.im.cps.footopic.network.DonApiClient;
 import jp.ac.dendai.im.cps.footopic.utils.DividerItemDecoration;
 import jp.ac.dendai.im.cps.footopic.utils.SpinningProgressDialog;
 
@@ -83,7 +81,7 @@ public class RecyclerFragment extends Fragment implements RecyclerAdapter.MyOnIt
                 Log.d("onLoadMore", String.valueOf(current_page));
                 progressDialog.show(getFragmentManager(), "DialogFragment");
 
-                HttpRequest request = new HttpRequest() {
+                DonApiClient request = new DonApiClient() {
                     @Override
                     public void onFailure(Request request, IOException e) {
                         Log.e("onFailure", "dame", e.fillInStackTrace());
@@ -115,12 +113,7 @@ public class RecyclerFragment extends Fragment implements RecyclerAdapter.MyOnIt
                     }
                 };
 
-                Map<String, String> params = new HashMap<>();
-                params.put("page", String.valueOf(current_page));
-                params.put("per_page", "20");
-                params.put("include_details", "true");
-                request.setParams(params);
-                request.getRecentArticleList();
+                request.getRecentArticleList(current_page, true);
             }
         });
 
@@ -133,7 +126,7 @@ public class RecyclerFragment extends Fragment implements RecyclerAdapter.MyOnIt
 
         progressDialog.show(getFragmentManager(), "DialogFragment");
 
-        HttpRequest request = new HttpRequest() {
+        DonApiClient request = new DonApiClient() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Log.e("onFailure", "dame", e.fillInStackTrace());
@@ -171,11 +164,6 @@ public class RecyclerFragment extends Fragment implements RecyclerAdapter.MyOnIt
             }
         };
 
-        Map<String, String> params = new HashMap<>();
-        params.put("page", "1");
-        params.put("per_page", "20");
-        params.put("include_details", "false");
-        request.setParams(params);
         request.getRecentArticleList();
     }
 
