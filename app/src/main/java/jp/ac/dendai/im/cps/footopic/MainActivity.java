@@ -24,15 +24,13 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleListFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.RecyclerFragment;
-import jp.ac.dendai.im.cps.footopic.network.HttpRequest;
+import jp.ac.dendai.im.cps.footopic.network.DonApiClient;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -146,7 +144,7 @@ public class MainActivity extends AppCompatActivity
     public void onRecyclerFragmentInteraction(int position, int articleId) {
         Log.d(TAG, "MainActivity onRecycler position: " + position);
 
-        HttpRequest request = new HttpRequest() {
+        DonApiClient request = new DonApiClient() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Log.e("onFailure", "dame", e.fillInStackTrace());
@@ -176,10 +174,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        Map<String, String> params = new HashMap<>();
-        params.put("id", String.valueOf(articleId));
-        request.setParams(params);
-        request.getArticle();
+        request.getArticle(articleId);
     }
 
     public void fragmentReplace(Fragment fragment) {
@@ -194,7 +189,7 @@ public class MainActivity extends AppCompatActivity
      * @param v
      */
     private void initUser(final View v) {
-        HttpRequest request = new HttpRequest() {
+        DonApiClient request = new DonApiClient() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Log.e("onFailure", "dame", e.fillInStackTrace());
@@ -231,9 +226,6 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        Map<String, String> params = new HashMap<>();
-        params.put("user_id", "3");
-        request.setParams(params);
-        request.getUser();
+        request.getUser(3);
     }
 }
