@@ -1,16 +1,16 @@
-package jp.ac.dendai.im.cps.footopic.bean;
+package jp.ac.dendai.im.cps.footopic.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jp.ac.dendai.im.cps.footopic.R;
-import jp.ac.dendai.im.cps.footopic.util.App;
+import jp.ac.dendai.im.cps.footopic.utils.App;
 
 /**
  * Created by naoya on 15/12/12.
  * サムネイルの画像のURLの構造
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class ImageBean {
+public class Image {
     private String url;
     private String thumb_url;
 

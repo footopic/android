@@ -1,6 +1,7 @@
-package jp.ac.dendai.im.cps.footopic.util;
+package jp.ac.dendai.im.cps.footopic.utils;
 
 import android.app.Activity;
+import android.os.Handler;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 
@@ -11,6 +12,7 @@ public class App extends android.app.Application {
 
     private static App instance;
     private static Activity activity;
+    private static Handler handler = new Handler();
 
     public App() {
         instance = this;
@@ -18,14 +20,6 @@ public class App extends android.app.Application {
 
     public static App getInstance() {
         return instance;
-    }
-
-    public static Activity getActivity() {
-        return activity;
-    }
-
-    public static void setActivity(Activity activity) {
-        App.activity = activity;
     }
 
     @Override
