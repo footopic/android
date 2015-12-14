@@ -2,6 +2,8 @@ package jp.ac.dendai.im.cps.footopic.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import jp.ac.dendai.im.cps.footopic.R;
 import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
@@ -22,13 +27,13 @@ import jp.ac.dendai.im.cps.footopic.bean.UserBean;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     private LayoutInflater mInflater;
-    private ArrayList<ArticleBean> mData;
     private Context mContext;
+    private SortedList<ArticleBean> sortedList;
 
-    public RecyclerAdapter(Context context, ArrayList<ArticleBean> data) {
+    public RecyclerAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
-        mData = data;
+        sortedList = new SortedList<ArticleBean>(ArticleBean.class, new SortedListCallback(this));
     }
 
     @Override
@@ -39,8 +44,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(final RecyclerAdapter.ViewHolder holder, final int position) {
         // データ表示
-        if (mData != null && mData.size() > position && mData.get(position) != null) {
-            ArticleBean article = mData.get(position);
+        if (sortedList != null && sortedList.size() > position && sortedList.get(position) != null) {
+            ArticleBean article = sortedList.get(position);
             UserBean user = article.getUser();
 
 //            AsyncImageTask imageTask = new AsyncImageTask(holder.thumb);
@@ -48,7 +53,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             Uri uri = Uri.parse(user.getImage().getThumb_url());
             holder.thumb.setImageURI(uri);
 
-            String time = article.getCreated_at().substring(0, 9) + " " + article.getCreated_at().substring(11, 16);
+            String time = article.getCreated_at();
             holder.name.setText(user.getScreen_name() + " が " + time + " に投稿");
             holder.title.setText(article.getTitle());
 
@@ -62,11 +67,31 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        if (mData != null) {
-            return mData.size();
+        if (sortedList != null) {
+            return sortedList.size();
         } else {
             return 0;
         }
+    }
+
+    public void addDataOf(List<ArticleBean> dataList) {
+        sortedList.addAll(dataList);
+    }
+
+    public void removeDataOf(List<ArticleBean> dataList) {
+        sortedList.beginBatchedUpdates();
+        for (ArticleBean data : dataList) {
+            sortedList.remove(data);
+        }
+        sortedList.endBatchedUpdates();
+    }
+
+    public void clearData() {
+        sortedList.clear();
+    }
+
+    public SortedList<ArticleBean> getList() {
+        return sortedList;
     }
 
     /**
@@ -85,6 +110,63 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             name = (TextView) itemView.findViewById(R.id.name_text);
             title = (TextView) itemView.findViewById(R.id.title_text);
             tags = (TextView) itemView.findViewById(R.id.tags_text);
+        }
+    }
+
+    private static class SortedListCallback extends SortedList.Callback<ArticleBean> {
+        private RecyclerView.Adapter adapter;
+
+        public SortedListCallback(@NonNull RecyclerView.Adapter adapter) {
+            this.adapter = adapter;
+        }
+
+        @Override
+        public int compare(ArticleBean o1, ArticleBean o2) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Date date1 = sdf.parse(o1.getUpdated_at());
+                Date date2 = sdf.parse(o2.getUpdated_at());
+
+                return date2.compareTo(date1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            return 0;
+        }
+
+        @Override
+        public void onInserted(int position, int count) {
+            adapter.notifyItemRangeInserted(position, count);
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+            adapter.notifyItemRangeRemoved(position, count);
+        }
+
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+            adapter.notifyItemMoved(fromPosition, toPosition);
+        }
+
+        @Override
+        public void onChanged(int position, int count) {
+            adapter.notifyItemRangeChanged(position, count);
+        }
+
+        @Override
+        public boolean areContentsTheSame(ArticleBean oldItem, ArticleBean newItem) {
+            String oldText = oldItem.getText();
+            if (oldText == null) {
+                return newItem.getText() == null;
+            }
+            return oldText.equals(newItem.getText());
+        }
+
+        @Override
+        public boolean areItemsTheSame(ArticleBean item1, ArticleBean item2) {
+            return item1.getId() == item2.getId();
         }
     }
 }

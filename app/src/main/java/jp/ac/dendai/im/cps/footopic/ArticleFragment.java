@@ -64,7 +64,7 @@ public class ArticleFragment extends Fragment {
         SimpleDraweeView draweeView = (SimpleDraweeView) v.findViewById(R.id.detail_thumb);
         draweeView.setImageURI(uri);
 
-        String time = article.getCreated_at().substring(0, 9) + " " + article.getCreated_at().substring(11, 16);
+        String time = article.getCreated_at();
         name.setText(user.getScreen_name() + " が " + time + " に投稿");
         title.setText(article.getTitle());
 

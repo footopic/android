@@ -56,7 +56,7 @@ public class CommentListAdapter extends BaseAdapter {
         Log.d("getView", comment.getCreated_at());
         Log.d("getView", comment.getText());
 
-        String time = comment.getCreated_at().substring(0, 9) + " " + comment.getCreated_at().substring(11, 16);
+        String time = comment.getCreated_at();
 
         ((TextView) v.findViewById(R.id.comment)).setText(comment.getText());
         ((TextView) v.findViewById(R.id.comment_time)).setText(time);

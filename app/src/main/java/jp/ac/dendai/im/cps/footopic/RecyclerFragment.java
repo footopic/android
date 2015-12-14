@@ -9,11 +9,11 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,11 +22,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.ac.dendai.im.cps.footopic.Listener.BottomLoadListener;
+import jp.ac.dendai.im.cps.footopic.Listener.RecyclerViewOnGestureListener;
 import jp.ac.dendai.im.cps.footopic.adapter.RecyclerAdapter;
 import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
 import jp.ac.dendai.im.cps.footopic.util.DividerItemDecoration;
 import jp.ac.dendai.im.cps.footopic.util.HttpPostHandler;
 import jp.ac.dendai.im.cps.footopic.util.HttpPostTask;
+import jp.ac.dendai.im.cps.footopic.util.SpinningProgressDialog;
 
 public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTouchListener {
     private Activity mActivity = null;
@@ -59,14 +62,19 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_recycler, container, false);
 
-        detector = new GestureDetectorCompat(getActivity(), new RecyclerViewOnGestureListener());
-
         // RecyclerViewを参照
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_view);
+
         // レイアウトマネージャを設定(ここで縦方向の標準リストであることを指定)
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mActivity));
         mRecyclerView.addOnItemTouchListener(this);
+        mRecyclerView.addOnScrollListener(new BottomLoadListener((LinearLayoutManager) mRecyclerView.getLayoutManager()) {
+            @Override
+            public void onLoadMore(int current_page) {
+                Log.d("onLoadMore", String.valueOf(current_page));
+            }
+        });
 
         return mView;
     }
@@ -74,6 +82,9 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        final SpinningProgressDialog progressDialog = SpinningProgressDialog.newInstance("Loading...", "記事を読み込んでいます。");
+        progressDialog.show(getFragmentManager(), "DialogFragment");
 
         HttpPostHandler postHandler = new HttpPostHandler() {
             @Override
@@ -85,12 +96,16 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
                 try {
                     articles = new ObjectMapper().readValue(response, new TypeReference<List<ArticleBean>>() {});
                     // ListViewと同じ
-                    mRecyclerAdapter = new RecyclerAdapter(mActivity, articles);
+                    mRecyclerAdapter = new RecyclerAdapter(mActivity);
                     mRecyclerView.setAdapter(mRecyclerAdapter);
 
-                    for (ArticleBean bean : articles) {
-//                        Log.d("onPostComplete", bean.toString());
-                    }
+                    // Listenerの登録
+                    detector = new GestureDetectorCompat(getActivity(), new RecyclerViewOnGestureListener(mRecyclerView, mListener, articles));
+
+                    ((RecyclerAdapter) mRecyclerView.getAdapter()).clearData();
+                    ((RecyclerAdapter) mRecyclerView.getAdapter()).addDataOf(articles);
+
+                    progressDialog.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -100,6 +115,9 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
             public void onPostFailed(String response) {
                 Log.d("onPostFailed", "no");
                 Log.d("onPostFailed", response);
+
+                progressDialog.dismiss();
+                Toast.makeText(getActivity(), "記事を読み込めませんでした\nresponse: " + response, Toast.LENGTH_SHORT);
             }
         };
 
@@ -134,136 +152,4 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
         public void onRecyclerFragmentInteraction(int position, ArticleBean article);
     }
 
-    /**
-     * ListItemのクリック処理
-     * TODO: 透明になって戻らないことがある
-     */
-    private class RecyclerViewOnGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-            int position = mRecyclerView.getChildAdapterPosition(view);
-
-            Log.d("RecyclerFragment", "SingleTap position " + position);
-
-            if (position == -1) {
-                return false;
-            }
-
-            // handle single tap
-            mListener.onRecyclerFragmentInteraction(position, articles.get(position));
-
-            return super.onSingleTapConfirmed(e);
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-            int position = mRecyclerView.getChildAdapterPosition(view);
-
-            Log.d("RecyclerFragment", "SingleTapUp position " + position);
-
-            if (position == -1) {
-                return false;
-            }
-            view.setAlpha(1.0f);
-
-            return super.onSingleTapUp(e);
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-            int position = mRecyclerView.getChildAdapterPosition(view);
-
-            Log.d("RecyclerFragment", "Down position " + position);
-
-            if (position == -1) {
-                return false;
-            }
-
-            view.setAlpha(0.5f);
-
-            return super.onDown(e);
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-            int position = mRecyclerView.getChildAdapterPosition(view);
-
-            Log.d("RecyclerFragment", "LongPress position " + position);
-
-            if (position == -1) {
-                return;
-            }
-
-            view.setAlpha(1.0f);
-
-            // handle long press
-
-            super.onLongPress(e);
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
-            View view = mRecyclerView.findChildViewUnder(e1.getX(), e1.getY());
-            int position = mRecyclerView.getChildAdapterPosition(view);
-
-            Log.d("RecyclerFragment", "onScroll position " + position);
-
-            if (position == -1) {
-                return false;
-            }
-
-            view.setAlpha(1.0f);
-            return false;
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-        }
-
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-            View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-            int position = mRecyclerView.getChildAdapterPosition(view);
-
-            Log.d("RecyclerFragment", "DoubleTap position " + position);
-
-            if (position == -1) {
-                return false;
-            }
-
-            view.setAlpha(1.0f);
-            return false;
-        }
-
-        @Override
-        public boolean onDoubleTapEvent(MotionEvent e) {
-            View view = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
-            int position = mRecyclerView.getChildAdapterPosition(view);
-
-            Log.d("RecyclerFragment", "DoubleTapEvent position " + position);
-
-            if (position == -1) {
-                return false;
-            }
-
-            view.setAlpha(1.0f);
-            return false;
-        }
-
-        @Override
-        public boolean onContextClick(MotionEvent e) {
-            return false;
-        }
-    }
 }

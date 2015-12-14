@@ -28,7 +28,7 @@ public class UserBean {
     }
 
     public String getCreated_at() {
-        return created_at;
+        return created_at.substring(0, 9) + " " + created_at.substring(11, 16);
     }
 
     public void setCreated_at(String created_at) {
@@ -36,7 +36,7 @@ public class UserBean {
     }
 
     public String getUpdated_at() {
-        return updated_at;
+        return updated_at.substring(0, 9) + " " + updated_at.substring(11, 16);
     }
 
     public void setUpdated_at(String updated_at) {
