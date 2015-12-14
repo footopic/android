@@ -86,7 +86,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
                     mRecyclerView.setAdapter(mRecyclerAdapter);
 
                     for (ArticleBean bean : articles) {
-                        Log.d("onPostComplete", bean.toString());
+//                        Log.d("onPostComplete", bean.toString());
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

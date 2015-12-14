@@ -2,6 +2,8 @@ package jp.ac.dendai.im.cps.footopic.util;
 
 import android.app.Activity;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 /**
  * Created by naoya on 2015/04/09.
  */
@@ -28,6 +30,7 @@ public class App extends android.app.Application {
 
     @Override
     public void onCreate() {
+        Fresco.initialize(this);
         super.onCreate();
     }
 }
