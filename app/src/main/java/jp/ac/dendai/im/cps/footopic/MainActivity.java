@@ -1,8 +1,8 @@
 package jp.ac.dendai.im.cps.footopic;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,17 +20,19 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleListFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.RecyclerFragment;
-import jp.ac.dendai.im.cps.footopic.network.HttpPostHandler;
-import jp.ac.dendai.im.cps.footopic.network.HttpPostTask;
-import jp.ac.dendai.im.cps.footopic.network.HttpType;
+import jp.ac.dendai.im.cps.footopic.network.HttpRequest;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -38,14 +40,12 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "Don";
     private FragmentManager manager;
-    private Activity mActivity;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mActivity = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -161,35 +161,45 @@ public class MainActivity extends AppCompatActivity
      * @param v
      */
     private void initUser(final View v) {
-        HttpPostHandler postHandler = new HttpPostHandler() {
+        HttpRequest request = new HttpRequest() {
             @Override
-            public void onPostCompleted(String response) {
-                Log.d("onPostCompleted", "ok");
-                Log.d("onPostCompleted", response);
-
-                try {
-                    User user = new ObjectMapper().readValue(response, new TypeReference<User>() {});
-
-                    Uri uri = Uri.parse(user.getImage().getUrl());
-                    SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.user_thumb);
-                    draweeView.setImageURI(uri);
-                    ((TextView) v.findViewById(R.id.user_name)).setText(user.getScreen_name());
-                    ((TextView) v.findViewById(R.id.user_mail)).setText(user.getScreen_name() + "@cps.im.dendai.ac.jp");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            public void onFailure(Request request, IOException e) {
+                Log.e("onFailure", "dame", e.fillInStackTrace());
             }
 
             @Override
-            public void onPostFailed(String response) {
-                Log.d("onPostFailed", "no");
-                Log.d("onPostFailed", response);
+            public void onResponse(Response response) throws IOException {
+                final String responseCode = response.body().string();
+
+                Log.d("onPostCompleted", "ok");
+                Log.d("onPostCompleted", responseCode);
+
+                Log.d("onPostCompleter", response.request().toString());
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            final User user = new ObjectMapper().readValue(responseCode, new TypeReference<User>(){});
+
+                            final Uri uri = Uri.parse(user.getImage().getUrl());
+
+                            ((SimpleDraweeView) v.findViewById(R.id.user_thumb)).setImageURI(uri);
+                            ((TextView) v.findViewById(R.id.user_name)).setText(user.getScreen_name());
+                            ((TextView) v.findViewById(R.id.user_mail)).setText(user.getScreen_name() + "@cps.im.dendai.ac.jp");
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         };
 
-        HttpPostTask task = new HttpPostTask(getString(R.string.url_user_show), postHandler, HttpType.Get);
-        task.addPostParam("user_id", "3");
-        task.execute();
-
+        Map<String, String> params = new HashMap<>();
+        params.put("user_id", "3");
+        request.setParams(params);
+        request.getUser();
     }
 }

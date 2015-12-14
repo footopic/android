@@ -36,13 +36,13 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:+'
 
 
-    compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:+'
     compile 'com.jpardogo.materialtabstrip:library:+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.4@jar'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.4@jar'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4@jar'
     compile 'com.facebook.fresco:fresco:+'
     compile 'us.feras.mdv:markdownview:1.1.0'
+    compile 'com.squareup.okhttp:okhttp:2.7.+'
 
     compile 'com.google.android.gms:play-services-plus:+'
     compile 'com.google.oauth-client:google-oauth-client-jetty:+'
