@@ -143,10 +143,43 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRecyclerFragmentInteraction(int position, Article article) {
+    public void onRecyclerFragmentInteraction(int position, int articleId) {
         Log.d(TAG, "MainActivity onRecycler position: " + position);
 
-        fragmentReplace(ArticleFragment.newInstance(article));
+        HttpRequest request = new HttpRequest() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                Log.e("onFailure", "dame", e.fillInStackTrace());
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                final String responseCode = response.body().string();
+
+                Log.d("onPostCompleted", "ok");
+                Log.d("onPostCompleted", responseCode);
+
+                Log.d("onPostCompleter", response.request().toString());
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Article article = new ObjectMapper().readValue(responseCode, new TypeReference<Article>(){});
+                            fragmentReplace(ArticleFragment.newInstance(article));
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        };
+
+        Map<String, String> params = new HashMap<>();
+        params.put("id", String.valueOf(articleId));
+        request.setParams(params);
+        request.getArticle();
     }
 
     public void fragmentReplace(Fragment fragment) {
@@ -181,7 +214,8 @@ public class MainActivity extends AppCompatActivity
                     public void run() {
 
                         try {
-                            final User user = new ObjectMapper().readValue(responseCode, new TypeReference<User>(){});
+                            final User user = new ObjectMapper().readValue(responseCode, new TypeReference<User>() {
+                            });
 
                             final Uri uri = Uri.parse(user.getImage().getUrl());
 

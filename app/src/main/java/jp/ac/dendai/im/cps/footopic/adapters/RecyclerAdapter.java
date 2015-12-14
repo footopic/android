@@ -29,20 +29,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private LayoutInflater mInflater;
     private Context mContext;
     private SortedList<Article> sortedList;
+    private MyOnItemClickListener mListener;
 
     /**
      * RecyclerViewのアダプター
      * @param context
      */
-    public RecyclerAdapter(Context context) {
-        mInflater = LayoutInflater.from(context);
-        mContext = context;
-        sortedList = new SortedList<>(Article.class, new SortedListCallback(this));
+    public RecyclerAdapter(Context context, MyOnItemClickListener listener) {
+        this.mInflater = LayoutInflater.from(context);
+        this.mContext = context;
+        this.sortedList = new SortedList<>(Article.class, new SortedListCallback(this));
+        this.mListener = listener;
     }
 
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(mInflater.inflate(R.layout.list_item, parent, false));
+        View v = mInflater.inflate(R.layout.list_item, parent, false);
+        v.setOnClickListener(new OnRecyclerItemClickListener());
+
+        return new ViewHolder(v);
     }
 
     @Override
@@ -51,6 +56,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         if (sortedList != null && sortedList.size() > position && sortedList.get(position) != null) {
             Article article = sortedList.get(position);
             User user = article.getUser();
+
+            holder.setArticleId(article.getId());
 
             Uri uri = Uri.parse(user.getImage().getThumb_url());
             holder.thumb.setImageURI(uri);
@@ -65,6 +72,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             }
             holder.tags.setText(tags);
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return sortedList.get(position).getId();
     }
 
     @Override
@@ -107,6 +119,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return sortedList;
     }
 
+    public interface MyOnItemClickListener {
+        public void onItemClickLister(View v);
+    }
+
+    class OnRecyclerItemClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            mListener.onItemClickLister(v);
+        }
+
+    }
+
     /**
      * ViewHolder
      * ItemのViewは固定なのでインナークラス
@@ -116,6 +141,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TextView name;
         TextView title;
         TextView tags;
+        TextView touch_item;
+        int articleId;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -123,6 +151,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             name = (TextView) itemView.findViewById(R.id.name_text);
             title = (TextView) itemView.findViewById(R.id.title_text);
             tags = (TextView) itemView.findViewById(R.id.tags_text);
+            touch_item = (TextView) itemView.findViewById(R.id.touch_item);
+        }
+
+        /**
+         * 記事のIdを付与
+         * @param articleId int型の数字
+         */
+        public void setArticleId(int articleId) {
+            this.articleId = articleId;
         }
     }
 
