@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic.util;
+package jp.ac.dendai.im.cps.footopic.utils;
 
 import android.app.Activity;
 

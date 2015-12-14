@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic;
+package jp.ac.dendai.im.cps.footopic.network;
 
 /**
  * Created by naoya on 15/12/12.

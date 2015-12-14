@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic.adapter;
+package jp.ac.dendai.im.cps.footopic.adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -17,8 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 import jp.ac.dendai.im.cps.footopic.R;
-import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
-import jp.ac.dendai.im.cps.footopic.bean.UserBean;
+import jp.ac.dendai.im.cps.footopic.entities.Article;
+import jp.ac.dendai.im.cps.footopic.entities.User;
 
 /**
  * Created by naoya on 15/12/11.
@@ -28,12 +28,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private LayoutInflater mInflater;
     private Context mContext;
-    private SortedList<ArticleBean> sortedList;
+    private SortedList<Article> sortedList;
 
+    /**
+     * RecyclerViewのアダプター
+     * @param context
+     */
     public RecyclerAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
-        sortedList = new SortedList<>(ArticleBean.class, new SortedListCallback(this));
+        sortedList = new SortedList<>(Article.class, new SortedListCallback(this));
     }
 
     @Override
@@ -45,8 +49,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void onBindViewHolder(final RecyclerAdapter.ViewHolder holder, final int position) {
         // データ表示
         if (sortedList != null && sortedList.size() > position && sortedList.get(position) != null) {
-            ArticleBean article = sortedList.get(position);
-            UserBean user = article.getUser();
+            Article article = sortedList.get(position);
+            User user = article.getUser();
 
             Uri uri = Uri.parse(user.getImage().getThumb_url());
             holder.thumb.setImageURI(uri);
@@ -72,23 +76,34 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-    public void addDataOf(List<ArticleBean> dataList) {
+    /**
+     * データ追加
+     * @param dataList 追加するデータリスト {@link List}
+     */
+    public void addDataOf(List<Article> dataList) {
         sortedList.addAll(dataList);
     }
 
-    public void removeDataOf(List<ArticleBean> dataList) {
+    public void removeDataOf(List<Article> dataList) {
         sortedList.beginBatchedUpdates();
-        for (ArticleBean data : dataList) {
+        for (Article data : dataList) {
             sortedList.remove(data);
         }
         sortedList.endBatchedUpdates();
     }
 
+    /**
+     * データ削除
+     */
     public void clearData() {
         sortedList.clear();
     }
 
-    public SortedList<ArticleBean> getList() {
+    /**
+     * 現在のデータリススト取得
+     * @return 現在のデータリスト {@link SortedList}
+     */
+    public SortedList<Article> getList() {
         return sortedList;
     }
 
@@ -111,7 +126,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-    private static class SortedListCallback extends SortedList.Callback<ArticleBean> {
+    private static class SortedListCallback extends SortedList.Callback<Article> {
         private RecyclerView.Adapter adapter;
 
         public SortedListCallback(@NonNull RecyclerView.Adapter adapter) {
@@ -119,7 +134,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
 
         @Override
-        public int compare(ArticleBean o1, ArticleBean o2) {
+        public int compare(Article o1, Article o2) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Date date1 = sdf.parse(o1.getCreated_at());
@@ -154,7 +169,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
 
         @Override
-        public boolean areContentsTheSame(ArticleBean oldItem, ArticleBean newItem) {
+        public boolean areContentsTheSame(Article oldItem, Article newItem) {
             String oldText = oldItem.getText();
             if (oldText == null) {
                 return newItem.getText() == null;
@@ -163,7 +178,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
 
         @Override
-        public boolean areItemsTheSame(ArticleBean item1, ArticleBean item2) {
+        public boolean areItemsTheSame(Article item1, Article item2) {
             return item1.getId() == item2.getId();
         }
     }

@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic.Listener;
+package jp.ac.dendai.im.cps.footopic.listeners;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,8 +8,8 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-import jp.ac.dendai.im.cps.footopic.RecyclerFragment;
-import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
+import jp.ac.dendai.im.cps.footopic.fragments.RecyclerFragment;
+import jp.ac.dendai.im.cps.footopic.entities.Article;
 
 /**
  * ListItemのクリック処理
@@ -19,10 +19,10 @@ public class RecyclerViewOnGestureListener extends GestureDetector.SimpleOnGestu
 
     private RecyclerView mRecyclerView;
     private RecyclerFragment.OnRecyclerFragmentInteractionListener mListener;
-    private ArrayList<ArticleBean> articles;
+    private ArrayList<Article> articles;
 
     public RecyclerViewOnGestureListener(RecyclerView recyclerView,
-               RecyclerFragment.OnRecyclerFragmentInteractionListener listener, ArrayList<ArticleBean> articles) {
+               RecyclerFragment.OnRecyclerFragmentInteractionListener listener, ArrayList<Article> articles) {
         this.mRecyclerView = recyclerView;
         this.mListener = listener;
         this.articles = articles;

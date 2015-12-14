@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic.util;
+package jp.ac.dendai.im.cps.footopic.network;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -28,8 +28,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
-import jp.ac.dendai.im.cps.footopic.HttpType;
 
 /**
  * Created by naoya on 2015/08/23.

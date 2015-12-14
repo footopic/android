@@ -1,10 +1,10 @@
-package jp.ac.dendai.im.cps.footopic.adapter;
+package jp.ac.dendai.im.cps.footopic.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import jp.ac.dendai.im.cps.footopic.RecyclerFragment;
+import jp.ac.dendai.im.cps.footopic.fragments.RecyclerFragment;
 
 /**
  * Created by naoya on 15/12/11.
@@ -12,6 +12,10 @@ import jp.ac.dendai.im.cps.footopic.RecyclerFragment;
  */
 public class DonFragmentPagerAdapter extends FragmentPagerAdapter {
 
+    /**
+     * TopページのPagerAdapter
+     * @param fm
+     */
     public DonFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }

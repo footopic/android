@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic;
+package jp.ac.dendai.im.cps.footopic.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -14,22 +14,23 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import jp.ac.dendai.im.cps.footopic.adapter.CommentListAdapter;
-import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
-import jp.ac.dendai.im.cps.footopic.bean.UserBean;
-import jp.ac.dendai.im.cps.footopic.util.App;
+import jp.ac.dendai.im.cps.footopic.R;
+import jp.ac.dendai.im.cps.footopic.adapters.CommentListAdapter;
+import jp.ac.dendai.im.cps.footopic.entities.Article;
+import jp.ac.dendai.im.cps.footopic.entities.User;
+import jp.ac.dendai.im.cps.footopic.utils.App;
 import us.feras.mdv.MarkdownView;
 
 
 public class ArticleFragment extends Fragment {
 
-    private ArticleBean article;
+    private Article article;
 
     /**
      * @param article ArticleBean
      * @return A new instance of fragment ArticleFragment.
      */
-    public static ArticleFragment newInstance(ArticleBean article) {
+    public static ArticleFragment newInstance(Article article) {
         ArticleFragment fragment = new ArticleFragment();
         fragment.setArticle(article);
         return fragment;
@@ -58,7 +59,7 @@ public class ArticleFragment extends Fragment {
         TextView title = (TextView) v.findViewById(R.id.detail_title_text);
         TextView tags = (TextView) v.findViewById(R.id.detail_tags_text);
 
-        UserBean user = article.getUser();
+        User user = article.getUser();
 
         Uri uri = Uri.parse(user.getImage().getUrl());
         SimpleDraweeView draweeView = (SimpleDraweeView) v.findViewById(R.id.detail_thumb);
@@ -100,7 +101,7 @@ public class ArticleFragment extends Fragment {
         super.onDetach();
     }
 
-    public void setArticle(ArticleBean article) {
+    private void setArticle(Article article) {
         this.article = article;
     }
 

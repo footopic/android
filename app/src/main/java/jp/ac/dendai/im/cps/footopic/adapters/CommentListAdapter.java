@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic.adapter;
+package jp.ac.dendai.im.cps.footopic.adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -12,23 +12,32 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import jp.ac.dendai.im.cps.footopic.R;
-import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
+import jp.ac.dendai.im.cps.footopic.entities.Article;
 
 /**
  * Created by naoya on 15/12/14.
+ * 記事詳細ページのコメントリスト用Adapter
  */
 public class CommentListAdapter extends BaseAdapter {
 
     Context mContext;
     LayoutInflater layoutInflater = null;
-    ArticleBean[] commentList;
+    Article[] commentList;
 
+    /**
+     * 記事詳細ページのコメントリスト用Adapter
+     * @param context
+     */
     public CommentListAdapter(Context context) {
         this.mContext = context;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void setCommentList(ArticleBean[] list) {
+    /**
+     * 表示するデータのリスト
+     * @param list
+     */
+    public void setCommentList(Article[] list) {
         this.commentList = list;
     }
 
@@ -51,7 +60,7 @@ public class CommentListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = layoutInflater.inflate(R.layout.list_comment_item, parent, false);
 
-        ArticleBean comment = commentList[position];
+        Article comment = commentList[position];
 
         Log.d("getView", comment.getCreated_at());
         Log.d("getView", comment.getText());

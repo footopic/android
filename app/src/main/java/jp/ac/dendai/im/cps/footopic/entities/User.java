@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic.bean;
+package jp.ac.dendai.im.cps.footopic.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Userの構造
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class UserBean {
+public class User {
     private int id;
     private String created_at;
     private String updated_at;
@@ -15,9 +15,9 @@ public class UserBean {
     private String name;
     private String provider;
     private String uid;
-    private ImageBean image;
+    private Image image;
     private int article_count;
-    private ArticleBean[] recent_articles;
+    private Article[] recent_articles;
 
     public int getId() {
         return id;
@@ -83,19 +83,19 @@ public class UserBean {
         this.name = name;
     }
 
-    public ImageBean getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(ImageBean image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 
-    public ArticleBean[] getRecent_articles() {
+    public Article[] getRecent_articles() {
         return recent_articles;
     }
 
-    public void setRecent_articles(ArticleBean[] recent_articles) {
+    public void setRecent_articles(Article[] recent_articles) {
         this.recent_articles = recent_articles;
     }
 

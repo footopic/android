@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic;
+package jp.ac.dendai.im.cps.footopic.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -21,20 +21,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.ac.dendai.im.cps.footopic.Listener.BottomLoadListener;
-import jp.ac.dendai.im.cps.footopic.Listener.RecyclerViewOnGestureListener;
-import jp.ac.dendai.im.cps.footopic.adapter.RecyclerAdapter;
-import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
-import jp.ac.dendai.im.cps.footopic.util.DividerItemDecoration;
-import jp.ac.dendai.im.cps.footopic.util.HttpPostHandler;
-import jp.ac.dendai.im.cps.footopic.util.HttpPostTask;
-import jp.ac.dendai.im.cps.footopic.util.SpinningProgressDialog;
+import jp.ac.dendai.im.cps.footopic.network.HttpType;
+import jp.ac.dendai.im.cps.footopic.R;
+import jp.ac.dendai.im.cps.footopic.listeners.BottomLoadListener;
+import jp.ac.dendai.im.cps.footopic.listeners.RecyclerViewOnGestureListener;
+import jp.ac.dendai.im.cps.footopic.adapters.RecyclerAdapter;
+import jp.ac.dendai.im.cps.footopic.entities.Article;
+import jp.ac.dendai.im.cps.footopic.utils.DividerItemDecoration;
+import jp.ac.dendai.im.cps.footopic.network.HttpPostHandler;
+import jp.ac.dendai.im.cps.footopic.network.HttpPostTask;
+import jp.ac.dendai.im.cps.footopic.utils.SpinningProgressDialog;
 
+/**
+ * Articlesページの {@link Fragment}
+ */
 public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTouchListener {
     private Activity mActivity = null;
     private OnRecyclerFragmentInteractionListener mListener;
     private View mView;
-    private ArrayList<ArticleBean> articles;
+    private ArrayList<Article> articles;
 
     // RecyclerView, Adapter
     private RecyclerView mRecyclerView = null;
@@ -81,7 +86,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
                         Log.d("onPostCompleted", response);
 
                         try {
-                            articles = new ObjectMapper().readValue(response, new TypeReference<List<ArticleBean>>() {});
+                            articles = new ObjectMapper().readValue(response, new TypeReference<List<Article>>() {});
                             ((RecyclerAdapter) mRecyclerView.getAdapter()).addDataOf(articles);
 
                             progressDialog.dismiss();
@@ -124,7 +129,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
                 Log.d("onPostCompleted", response);
 
                 try {
-                    articles = new ObjectMapper().readValue(response, new TypeReference<List<ArticleBean>>() {});
+                    articles = new ObjectMapper().readValue(response, new TypeReference<List<Article>>() {});
                     // ListViewと同じ
                     mRecyclerAdapter = new RecyclerAdapter(mActivity);
                     mRecyclerView.setAdapter(mRecyclerAdapter);
@@ -175,11 +180,11 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
     }
 
     /**
-     *
+     * {@link RecyclerView} 用のItemClickListener
      */
     public interface OnRecyclerFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onRecyclerFragmentInteraction(int position, ArticleBean article);
+        public void onRecyclerFragmentInteraction(int position, Article article);
     }
 
 }

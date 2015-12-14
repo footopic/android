@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic;
+package jp.ac.dendai.im.cps.footopic.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -12,13 +12,14 @@ import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
-import jp.ac.dendai.im.cps.footopic.adapter.DonFragmentPagerAdapter;
+import jp.ac.dendai.im.cps.footopic.R;
+import jp.ac.dendai.im.cps.footopic.adapters.DonFragmentPagerAdapter;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link jp.ac.dendai.im.cps.footopic.ArticleListFragment.OnArticleListFragmentInteractionListener} interface
+ * {@link ArticleListFragment.OnArticleListFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link ArticleListFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -87,7 +88,7 @@ public class ArticleListFragment extends Fragment {
 
     /**
      * Pagerの初期化
-     * @param v
+     * @param v 初期化する {@link PagerSlidingTabStrip} がある {@link ViewGroup}
      */
     private void initPager(View v) {
         final ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
@@ -99,7 +100,10 @@ public class ArticleListFragment extends Fragment {
         tabs.setViewPager(viewPager);
     }
 
-    public void setFragmentManager(FragmentManager manager) {
+    /**
+     * @param manager
+     */
+    private void setFragmentManager(FragmentManager manager) {
         this.manager = manager;
     }
 

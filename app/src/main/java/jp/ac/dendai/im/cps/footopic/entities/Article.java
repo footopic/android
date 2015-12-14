@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic.bean;
+package jp.ac.dendai.im.cps.footopic.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -7,15 +7,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Articleの構造
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class ArticleBean {
+public class Article {
     private int id;
     private String created_at;
     private String updated_at;
     private String title;
     private String text;
     private String[] tags;
-    private ArticleBean[] comments;
-    private UserBean user;
+    private Article[] comments;
+    private User user;
 
     public int getId() {
         return id;
@@ -65,19 +65,19 @@ public class ArticleBean {
         this.tags = tags;
     }
 
-    public ArticleBean[] getComments() {
+    public Article[] getComments() {
         return comments;
     }
 
-    public void setComments(ArticleBean[] comments) {
+    public void setComments(Article[] comments) {
         this.comments = comments;
     }
 
-    public UserBean getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UserBean user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

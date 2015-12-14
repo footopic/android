@@ -23,14 +23,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
-import jp.ac.dendai.im.cps.footopic.bean.UserBean;
-import jp.ac.dendai.im.cps.footopic.util.HttpPostHandler;
-import jp.ac.dendai.im.cps.footopic.util.HttpPostTask;
+import jp.ac.dendai.im.cps.footopic.entities.Article;
+import jp.ac.dendai.im.cps.footopic.entities.User;
+import jp.ac.dendai.im.cps.footopic.fragments.ArticleFragment;
+import jp.ac.dendai.im.cps.footopic.fragments.ArticleListFragment;
+import jp.ac.dendai.im.cps.footopic.fragments.RecyclerFragment;
+import jp.ac.dendai.im.cps.footopic.network.HttpPostHandler;
+import jp.ac.dendai.im.cps.footopic.network.HttpPostTask;
+import jp.ac.dendai.im.cps.footopic.network.HttpType;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-    ArticleListFragment.OnArticleListFragmentInteractionListener, RecyclerFragment.OnRecyclerFragmentInteractionListener {
+        ArticleListFragment.OnArticleListFragmentInteractionListener, RecyclerFragment.OnRecyclerFragmentInteractionListener {
 
     private static final String TAG = "Don";
     private FragmentManager manager;
@@ -139,7 +143,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRecyclerFragmentInteraction(int position, ArticleBean article) {
+    public void onRecyclerFragmentInteraction(int position, Article article) {
         Log.d(TAG, "MainActivity onRecycler position: " + position);
 
         fragmentReplace(ArticleFragment.newInstance(article));
@@ -152,6 +156,10 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
+    /**
+     * {@link NavigationView} に表示するUserの初期化
+     * @param v
+     */
     private void initUser(final View v) {
         HttpPostHandler postHandler = new HttpPostHandler() {
             @Override
@@ -159,9 +167,8 @@ public class MainActivity extends AppCompatActivity
                 Log.d("onPostCompleted", "ok");
                 Log.d("onPostCompleted", response);
 
-                ObjectMapper mapper = new ObjectMapper();
                 try {
-                    UserBean user = new ObjectMapper().readValue(response, new TypeReference<UserBean>() {});
+                    User user = new ObjectMapper().readValue(response, new TypeReference<User>() {});
 
                     Uri uri = Uri.parse(user.getImage().getUrl());
                     SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.user_thumb);
