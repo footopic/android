@@ -1,9 +1,12 @@
 package jp.ac.dendai.im.cps.footopic.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by naoya on 15/12/11.
  * Articleの構造
  */
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class ArticleBean {
     private int id;
     private String created_at;
