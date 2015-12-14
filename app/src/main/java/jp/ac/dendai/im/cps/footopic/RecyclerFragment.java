@@ -1,7 +1,6 @@
 package jp.ac.dendai.im.cps.footopic;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -42,7 +41,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
     private RecyclerAdapter mRecyclerAdapter = null;
     private GestureDetectorCompat detector;
 
-    private ProgressDialog progress;
+    private final SpinningProgressDialog progressDialog = SpinningProgressDialog.newInstance("Loading...", "記事を読み込んでいます。");
 
     @Override
     public void onAttach(Activity activity) {
@@ -73,6 +72,39 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
             @Override
             public void onLoadMore(int current_page) {
                 Log.d("onLoadMore", String.valueOf(current_page));
+
+                progressDialog.show(getFragmentManager(), "DialogFragment");
+                HttpPostHandler postHandler = new HttpPostHandler() {
+                    @Override
+                    public void onPostCompleted(String response) {
+                        Log.d("onPostCompleted", "ok");
+                        Log.d("onPostCompleted", response);
+
+                        try {
+                            articles = new ObjectMapper().readValue(response, new TypeReference<List<ArticleBean>>() {});
+                            ((RecyclerAdapter) mRecyclerView.getAdapter()).addDataOf(articles);
+
+                            progressDialog.dismiss();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onPostFailed(String response) {
+                        Log.d("onPostFailed", "no");
+                        Log.d("onPostFailed", response);
+
+                        progressDialog.dismiss();
+                        Toast.makeText(getActivity(), "記事を読み込めませんでした\nresponse: " + response, Toast.LENGTH_SHORT);
+                    }
+                };
+
+                HttpPostTask task = new HttpPostTask(getString(R.string.url_article_recent), postHandler, HttpType.Get);
+                task.addPostParam("page", String.valueOf(current_page));
+                task.addPostParam("per_page", "20");
+                task.addPostParam("include_details", "true");
+                task.execute();
             }
         });
 
@@ -83,7 +115,6 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final SpinningProgressDialog progressDialog = SpinningProgressDialog.newInstance("Loading...", "記事を読み込んでいます。");
         progressDialog.show(getFragmentManager(), "DialogFragment");
 
         HttpPostHandler postHandler = new HttpPostHandler() {
@@ -92,7 +123,6 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
                 Log.d("onPostCompleted", "ok");
                 Log.d("onPostCompleted", response);
 
-                ObjectMapper mapper = new ObjectMapper();
                 try {
                     articles = new ObjectMapper().readValue(response, new TypeReference<List<ArticleBean>>() {});
                     // ListViewと同じ

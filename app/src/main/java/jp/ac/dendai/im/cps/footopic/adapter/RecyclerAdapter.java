@@ -33,7 +33,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public RecyclerAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
-        sortedList = new SortedList<ArticleBean>(ArticleBean.class, new SortedListCallback(this));
+        sortedList = new SortedList<>(ArticleBean.class, new SortedListCallback(this));
     }
 
     @Override
@@ -48,8 +48,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             ArticleBean article = sortedList.get(position);
             UserBean user = article.getUser();
 
-//            AsyncImageTask imageTask = new AsyncImageTask(holder.thumb);
-//            imageTask.execute(user.getImage().getThumb_url());
             Uri uri = Uri.parse(user.getImage().getThumb_url());
             holder.thumb.setImageURI(uri);
 
@@ -124,8 +122,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public int compare(ArticleBean o1, ArticleBean o2) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                Date date1 = sdf.parse(o1.getUpdated_at());
-                Date date2 = sdf.parse(o2.getUpdated_at());
+                Date date1 = sdf.parse(o1.getCreated_at());
+                Date date2 = sdf.parse(o2.getCreated_at());
 
                 return date2.compareTo(date1);
             } catch (ParseException e) {
