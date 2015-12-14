@@ -1,6 +1,7 @@
 package jp.ac.dendai.im.cps.footopic;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -37,6 +38,8 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
     private RecyclerView mRecyclerView = null;
     private RecyclerAdapter mRecyclerAdapter = null;
     private GestureDetectorCompat detector;
+
+    private ProgressDialog progress;
 
     @Override
     public void onAttach(Activity activity) {
