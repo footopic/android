@@ -1,6 +1,7 @@
 package jp.ac.dendai.im.cps.footopic;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import jp.ac.dendai.im.cps.footopic.adapter.CommentListAdapter;
 import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
@@ -59,11 +60,9 @@ public class ArticleFragment extends Fragment {
 
         UserBean user = article.getUser();
 
-        Glide.with(this)
-                .load(user.getImage().getUrl())
-                .centerCrop()
-                .crossFade()
-                .into(thumb);
+        Uri uri = Uri.parse(user.getImage().getUrl());
+        SimpleDraweeView draweeView = (SimpleDraweeView) v.findViewById(R.id.detail_thumb);
+        draweeView.setImageURI(uri);
 
         String time = article.getCreated_at().substring(0, 9) + " " + article.getCreated_at().substring(11, 16);
         name.setText(user.getScreen_name() + " が " + time + " に投稿");

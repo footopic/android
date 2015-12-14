@@ -41,12 +41,10 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.4@jar'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.4@jar'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4@jar'
-    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.facebook.fresco:fresco:+'
     compile 'us.feras.mdv:markdownview:1.1.0'
 
     compile 'com.google.android.gms:play-services-plus:+'
-    compile 'com.google.android.gms:play-services-identity:+'
-    compile 'com.google.android.gms:play-services-base:+'
     compile 'com.google.oauth-client:google-oauth-client-jetty:+'
     compile 'com.google.apis:google-api-services-oauth2:+'
     compile 'com.google.apis:google-api-services-plus:+'

@@ -11,10 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:fresco="http://schemas.android.com/apk/res-auto"
             android:id="@+id/comment_item_thumb"
             android:layout_width="@dimen/thumb_small_size"
-            android:layout_height="@dimen/thumb_small_size" />
+            android:layout_height="@dimen/thumb_small_size"
+            />
 
         <TextView
             android:id="@+id/comment_user"
