@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,22 +27,23 @@ import jp.ac.dendai.im.cps.footopic.adapters.RecyclerAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.listeners.BottomLoadListener;
 import jp.ac.dendai.im.cps.footopic.network.DonApiClient;
+import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
+import jp.ac.dendai.im.cps.footopic.listeners.OnItemClickListener;
 import jp.ac.dendai.im.cps.footopic.utils.DividerItemDecoration;
 import jp.ac.dendai.im.cps.footopic.utils.SpinningProgressDialog;
 
 /**
  * Articlesページの {@link Fragment}
  */
-public class RecyclerFragment extends Fragment implements RecyclerAdapter.MyOnItemClickListener {
+public class RecyclerFragment extends Fragment implements OnItemClickListener {
     private Activity mActivity = null;
-    private OnRecyclerFragmentInteractionListener mListener;
+    private OnItemClickListener mListener;
     private View mView;
     private ArrayList<Article> articles;
 
     // RecyclerView, Adapter
     private RecyclerView mRecyclerView = null;
     private RecyclerAdapter mRecyclerAdapter = null;
-    private GestureDetectorCompat detector;
     private RecyclerFragment mFragment;
 
     private final SpinningProgressDialog progressDialog = SpinningProgressDialog.newInstance("Loading...", "記事を読み込んでいます。");
@@ -56,7 +56,7 @@ public class RecyclerFragment extends Fragment implements RecyclerAdapter.MyOnIt
 
         try {
             mActivity = activity;
-            mListener = (OnRecyclerFragmentInteractionListener) activity;
+            mListener = (OnItemClickListener) activity;
             mFragment = this;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
@@ -101,7 +101,8 @@ public class RecyclerFragment extends Fragment implements RecyclerAdapter.MyOnIt
                             public void run() {
 
                                 try {
-                                    articles = new ObjectMapper().readValue(responseCode, new TypeReference<List<Article>>() {});
+                                    articles = new ObjectMapper().readValue(responseCode, new TypeReference<List<Article>>() {
+                                    });
                                     ((RecyclerAdapter) mRecyclerView.getAdapter()).addDataOf(articles);
 
                                     progressDialog.dismiss();
@@ -113,7 +114,7 @@ public class RecyclerFragment extends Fragment implements RecyclerAdapter.MyOnIt
                     }
                 };
 
-                request.getRecentArticleList(current_page, true);
+                request.getRecentArticleList(current_page);
             }
         });
 
@@ -168,18 +169,7 @@ public class RecyclerFragment extends Fragment implements RecyclerAdapter.MyOnIt
     }
 
     @Override
-    public void onItemClickLister(View v) {
-        int itemPosition = mRecyclerView.getChildAdapterPosition(v);
-        Log.d("onItemClickListener", "itemPosition: " + itemPosition);
-        mListener.onRecyclerFragmentInteraction(itemPosition, (int) mRecyclerView.getAdapter().getItemId(itemPosition));
+    public void onItemClick(int id, OnChildItemClickListener.ItemType type) {
+        mListener.onItemClick(id, type);
     }
-
-    /**
-     * {@link RecyclerView} 用のItemClickListener
-     */
-    public interface OnRecyclerFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onRecyclerFragmentInteraction(int position, int articleId);
-    }
-
 }

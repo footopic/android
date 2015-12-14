@@ -71,8 +71,7 @@ public class CommentListAdapter extends BaseAdapter {
         ((TextView) v.findViewById(R.id.comment_time)).setText(time);
         ((TextView) v.findViewById(R.id.comment_user)).setText(comment.getUser().getScreen_name());
         Uri uri = Uri.parse(comment.getUser().getImage().getThumb_url());
-        SimpleDraweeView draweeView = (SimpleDraweeView) v.findViewById(R.id.comment_item_thumb);
-        draweeView.setImageURI(uri);
+        ((SimpleDraweeView) v.findViewById(R.id.comment_item_thumb)).setImageURI(uri);
 
         return v;
     }

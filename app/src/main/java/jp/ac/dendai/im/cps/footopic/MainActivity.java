@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -29,14 +30,16 @@ import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleListFragment;
-import jp.ac.dendai.im.cps.footopic.fragments.RecyclerFragment;
 import jp.ac.dendai.im.cps.footopic.network.DonApiClient;
+import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
+import jp.ac.dendai.im.cps.footopic.listeners.OnItemClickListener;
+import jp.ac.dendai.im.cps.footopic.utils.App;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ArticleListFragment.OnArticleListFragmentInteractionListener, RecyclerFragment.OnRecyclerFragmentInteractionListener {
+        ArticleListFragment.OnArticleListFragmentInteractionListener, OnItemClickListener {
 
-    private static final String TAG = "Don";
+    private static final String TAG = "MainActivity";
     private FragmentManager manager;
     private Handler handler = new Handler();
 
@@ -140,43 +143,6 @@ public class MainActivity extends AppCompatActivity
     public void onArticleListFragmentInteraction(Uri uri) {
     }
 
-    @Override
-    public void onRecyclerFragmentInteraction(int position, int articleId) {
-        Log.d(TAG, "MainActivity onRecycler position: " + position);
-
-        DonApiClient request = new DonApiClient() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                Log.e("onFailure", "dame", e.fillInStackTrace());
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                final String responseCode = response.body().string();
-
-                Log.d("onPostCompleted", "ok");
-                Log.d("onPostCompleted", responseCode);
-
-                Log.d("onPostCompleter", response.request().toString());
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Article article = new ObjectMapper().readValue(responseCode, new TypeReference<Article>(){});
-                            fragmentReplace(ArticleFragment.newInstance(article));
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        };
-
-        request.getArticle(articleId);
-    }
-
     public void fragmentReplace(Fragment fragment) {
         manager.beginTransaction()
                 .add(R.id.container, fragment)
@@ -219,7 +185,11 @@ public class MainActivity extends AppCompatActivity
                             ((TextView) v.findViewById(R.id.user_mail)).setText(user.getScreen_name() + "@cps.im.dendai.ac.jp");
 
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Log.e(TAG, "initUser", e.fillInStackTrace());
+                            Toast.makeText(App.getInstance(), "Userを読み込めませんでした。", Toast.LENGTH_SHORT).show();
+                        } catch (NullPointerException e) {
+                            Log.e(TAG, "initUser", e.fillInStackTrace());
+                            Toast.makeText(App.getInstance(), "Userを読み込めませんでした。", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -227,5 +197,45 @@ public class MainActivity extends AppCompatActivity
         };
 
         request.getUser(3);
+    }
+
+    @Override
+    public void onItemClick(int id, OnChildItemClickListener.ItemType type) {
+        if (type ==  OnChildItemClickListener.ItemType.Article) {
+            DonApiClient client = new DonApiClient() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    Log.e("onFailure", "dame", e.fillInStackTrace());
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    final String responseCode = response.body().string();
+
+                    Log.d("onPostCompleted", "ok");
+                    Log.d("onPostCompleted", responseCode);
+
+                    Log.d("onPostCompleter", response.request().toString());
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Article article = new ObjectMapper().readValue(responseCode, new TypeReference<Article>(){});
+                                fragmentReplace(ArticleFragment.newInstance(article));
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            };
+
+            client.getArticle(id);
+
+        } else if (type == OnChildItemClickListener.ItemType.Member) {
+            Log.d("Activity onItemClick", "member id: " + String.valueOf(id));
+        }
     }
 }
