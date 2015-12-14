@@ -3,16 +3,20 @@ package jp.ac.dendai.im.cps.footopic;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import jp.ac.dendai.im.cps.footopic.adapter.CommentListAdapter;
 import jp.ac.dendai.im.cps.footopic.bean.ArticleBean;
 import jp.ac.dendai.im.cps.footopic.bean.UserBean;
+import jp.ac.dendai.im.cps.footopic.util.App;
 import us.feras.mdv.MarkdownView;
 
 
@@ -73,6 +77,16 @@ public class ArticleFragment extends Fragment {
 
         MarkdownView mdView = (MarkdownView) v.findViewById(R.id.markdownView);
         mdView.loadMarkdown(article.getText());
+
+
+        if (article.getComments().length > 0) {
+            Log.d("ArticleFragment", article.getComments()[0].getText());
+            ListView listView = (ListView) v.findViewById(R.id.comment_list);
+
+            CommentListAdapter adapter = new CommentListAdapter(App.getInstance());
+            adapter.setCommentList(article.getComments());
+            listView.setAdapter(adapter);
+        }
 
         return v;
     }

@@ -103,7 +103,7 @@ public class RecyclerFragment extends Fragment implements RecyclerView.OnItemTou
         HttpPostTask task = new HttpPostTask(getString(R.string.url_article_recent), postHandler, HttpType.Get);
         task.addPostParam("page", "1");
         task.addPostParam("per_page", "20");
-        task.addPostParam("include_details", "false");
+        task.addPostParam("include_details", "true");
         task.execute();
     }
 
