@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,9 +29,9 @@ import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleListFragment;
-import jp.ac.dendai.im.cps.footopic.network.DonApiClient;
 import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
 import jp.ac.dendai.im.cps.footopic.listeners.OnItemClickListener;
+import jp.ac.dendai.im.cps.footopic.network.DonApiClient;
 import jp.ac.dendai.im.cps.footopic.utils.App;
 
 public class MainActivity extends AppCompatActivity
@@ -42,14 +41,31 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     private FragmentManager manager;
     private Handler handler = new Handler();
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("丼");
+        toolbar.setNavigationIcon(R.drawable.ic_action_image_dehaze);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int stack = manager.getBackStackEntryCount();
+                if (stack == 1) {
+                    manager.popBackStack();
+                    toolbar.setNavigationIcon(R.drawable.ic_action_image_dehaze);
+                } else if (stack > 1) {
+                    manager.popBackStack();
+                } else {
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    drawer.openDrawer(GravityCompat.START);
+                }
+            }
+        });
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -60,11 +76,10 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(toggle);
+//        toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -85,6 +100,20 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+
+//        int stack = manager.getBackStackEntryCount();
+//
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else if (stack == 1){
+//            manager.popBackStack();
+//            toolbar.setNavigationIcon(R.drawable.ic_action_image_dehaze);
+//        } else if (stack > 1){
+//            manager.popBackStack();
+//        } else {
+//            super.onBackPressed();
+//        }
     }
 
     @Override
@@ -148,6 +177,7 @@ public class MainActivity extends AppCompatActivity
                 .add(R.id.container, fragment)
                 .addToBackStack(null)
                 .commit();
+        toolbar.setNavigationIcon(R.drawable.ic_navigation_back);
     }
 
     /**
@@ -235,6 +265,7 @@ public class MainActivity extends AppCompatActivity
             client.getArticle(id);
 
         } else if (type == OnChildItemClickListener.ItemType.Member) {
+//            toolbar.setNavigationIcon(R.drawable.ic_navigation_back);
             Log.d("Activity onItemClick", "member id: " + String.valueOf(id));
         }
     }
