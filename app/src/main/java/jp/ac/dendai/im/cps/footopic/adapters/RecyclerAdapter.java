@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +21,8 @@ import java.util.List;
 import jp.ac.dendai.im.cps.footopic.R;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
+import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
+import jp.ac.dendai.im.cps.footopic.listeners.OnItemClickListener;
 
 /**
  * Created by naoya on 15/12/11.
@@ -29,13 +33,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private LayoutInflater mInflater;
     private Context mContext;
     private SortedList<Article> sortedList;
-    private MyOnItemClickListener mListener;
+    private OnItemClickListener mListener;
 
     /**
      * RecyclerViewのアダプター
      * @param context
      */
-    public RecyclerAdapter(Context context, MyOnItemClickListener listener) {
+    public RecyclerAdapter(Context context, OnItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
         this.sortedList = new SortedList<>(Article.class, new SortedListCallback(this));
@@ -44,10 +48,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = mInflater.inflate(R.layout.list_item, parent, false);
-        v.setOnClickListener(new OnRecyclerItemClickListener());
-
-        return new ViewHolder(v);
+        return new ViewHolder(mInflater.inflate(R.layout.list_item, parent, false));
     }
 
     @Override
@@ -57,10 +58,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             Article article = sortedList.get(position);
             User user = article.getUser();
 
-            holder.setArticleId(article.getId());
-
             Uri uri = Uri.parse(user.getImage().getThumb_url());
             holder.thumb.setImageURI(uri);
+            holder.thumb.setOnClickListener(new OnChildItemClickListener(mListener, OnChildItemClickListener.ItemType.Member, user.getId()));
 
             String time = article.getCreated_at();
             holder.name.setText(user.getScreen_name() + " が " + time + " に投稿");
@@ -71,6 +71,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 tags += str + " ";
             }
             holder.tags.setText(tags);
+
+            holder.layout.setOnClickListener(new OnChildItemClickListener(mListener, OnChildItemClickListener.ItemType.Article, article.getId()));
         }
     }
 
@@ -119,47 +121,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return sortedList;
     }
 
-    public interface MyOnItemClickListener {
-        public void onItemClickLister(View v);
-    }
-
-    class OnRecyclerItemClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            mListener.onItemClickLister(v);
-        }
-
-    }
-
     /**
-     * ViewHolder
+      ViewHolder
      * ItemのViewは固定なのでインナークラス
      */
     class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView thumb;
+        SimpleDraweeView thumb;
         TextView name;
         TextView title;
         TextView tags;
-        TextView touch_item;
-        int articleId;
+        LinearLayout layout;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
-            thumb = (ImageView) itemView.findViewById(R.id.thumb);
+            thumb = (SimpleDraweeView) itemView.findViewById(R.id.thumb);
             name = (TextView) itemView.findViewById(R.id.name_text);
             title = (TextView) itemView.findViewById(R.id.title_text);
             tags = (TextView) itemView.findViewById(R.id.tags_text);
-            touch_item = (TextView) itemView.findViewById(R.id.touch_item);
-        }
-
-        /**
-         * 記事のIdを付与
-         * @param articleId int型の数字
-         */
-        public void setArticleId(int articleId) {
-            this.articleId = articleId;
+            layout = (LinearLayout) itemView.findViewById(R.id.list_item_text_container);
         }
     }
 
