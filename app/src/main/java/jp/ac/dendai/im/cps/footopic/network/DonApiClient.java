@@ -48,6 +48,10 @@ public abstract class DonApiClient {
         getRecentArticleList(page, false);
     }
 
+    public void getRecentArticleList(boolean includeDetails) {
+        getRecentArticleList(1, includeDetails);
+    }
+
     public void getRecentArticleList() {
         getRecentArticleList(1, false);
     }

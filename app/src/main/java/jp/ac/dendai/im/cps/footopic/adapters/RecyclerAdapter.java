@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         // データ表示
         if (sortedList != null && sortedList.size() > position && sortedList.get(position) != null) {
             Article article = sortedList.get(position);
+
+            Log.d("onBindViewHolder", article.toString());
+
             User user = article.getUser();
 
             Uri uri = Uri.parse(user.getImage().getThumb_url());
