@@ -61,12 +61,11 @@ public class MainActivity extends AppCompatActivity
         mActivity = this;
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("丼");
+        toolbar.setTitle("Articles");
         toolbar.setNavigationIcon(R.drawable.ic_action_image_dehaze);
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int stack = manager.getBackStackEntryCount();
                 if (stack == 0) {
                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -77,27 +76,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        initUser(navigationView);
-
         Fragment[] fragments = new Fragment[] {
                 RecyclerFragment.newInstance(),
                 RecyclerFragment.newInstance()
@@ -107,6 +85,16 @@ public class MainActivity extends AppCompatActivity
         manager.beginTransaction()
                 .replace(R.id.container, ViewPagerFragment.newInstance(manager, fragments, titles))
                 .commit();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_articles);
+        initUser(navigationView);
     }
 
     @Override
