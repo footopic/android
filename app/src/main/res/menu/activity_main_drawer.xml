@@ -2,15 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_articles" android:icon="@android:drawable/ic_menu_camera"
+        <item android:id="@+id/nav_articles" android:icon="@drawable/ic_articles"
             android:title="Articles" />
-        <item android:id="@+id/nav_tags" android:icon="@android:drawable/ic_menu_gallery"
+        <item android:id="@+id/nav_tags" android:icon="@drawable/ic_tags"
             android:title="Tags" />
-        <item android:id="@+id/nav_members" android:icon="@android:drawable/ic_menu_slideshow"
+        <item android:id="@+id/nav_members" android:icon="@drawable/ic_member"
             android:title="Members" />
-        <item android:id="@+id/nav_settings" android:icon="@android:drawable/ic_menu_manage"
-            android:title="Settings" />
     </group>
+
+    <item android:title="Setting">
+        <menu>
+            <item android:id="@+id/nav_settings" android:icon="@android:drawable/ic_menu_manage"
+                android:title="Settings" />
+        </menu>
+    </item>
 
     <!--<item android:title="Communicate">-->
         <!--<menu>-->
