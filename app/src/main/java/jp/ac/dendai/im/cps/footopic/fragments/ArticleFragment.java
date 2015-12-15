@@ -48,6 +48,7 @@ public class ArticleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         if (article == null) {
             getFragmentManager().popBackStack();
         }

@@ -19,26 +19,30 @@ import jp.ac.dendai.im.cps.footopic.adapters.DonFragmentPagerAdapter;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ArticleListFragment.OnArticleListFragmentInteractionListener} interface
+ * {@link jp.ac.dendai.im.cps.footopic.fragments.ViewPagerFragment.OnViewPagerFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ArticleListFragment#newInstance} factory method to
+ * Use the {@link ViewPagerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ArticleListFragment extends Fragment {
+public class ViewPagerFragment extends Fragment {
 
     private FragmentManager manager;
-    private OnArticleListFragmentInteractionListener mListener;
+    private OnViewPagerFragmentInteractionListener mListener;
+    private Fragment[] fragments;
+    private String[] titles;
 
     /**
      * @return A new instance of fragment ArticleListFragment.
      */
-    public static ArticleListFragment newInstance(FragmentManager manager) {
-        ArticleListFragment fragment = new ArticleListFragment();
+    public static ViewPagerFragment newInstance(FragmentManager manager, Fragment[] fragments, String[] titles) {
+        ViewPagerFragment fragment = new ViewPagerFragment();
         fragment.setFragmentManager(manager);
+        fragment.setFragments(fragments);
+        fragment.setTitles(titles);
         return fragment;
     }
 
-    public ArticleListFragment() {
+    public ViewPagerFragment() {
         // Required empty public constructor
     }
 
@@ -55,7 +59,7 @@ public class ArticleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_article_list, container, false);
+        View v = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         initPager(v);
 
@@ -65,7 +69,7 @@ public class ArticleListFragment extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onArticleListFragmentInteraction(uri);
+            mListener.onViewPagerFragmentInteraction(uri);
         }
     }
 
@@ -73,7 +77,7 @@ public class ArticleListFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnArticleListFragmentInteractionListener) activity;
+            mListener = (OnViewPagerFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -93,7 +97,7 @@ public class ArticleListFragment extends Fragment {
     private void initPager(View v) {
         final ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
 
-        final DonFragmentPagerAdapter adapter = new DonFragmentPagerAdapter(manager);
+        final DonFragmentPagerAdapter adapter = new DonFragmentPagerAdapter(manager, fragments, titles);
         viewPager.setAdapter(adapter);
 
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) v.findViewById(R.id.tab_strip);
@@ -107,6 +111,14 @@ public class ArticleListFragment extends Fragment {
         this.manager = manager;
     }
 
+    private void setFragments(Fragment[] fragments) {
+        this.fragments = fragments;
+    }
+
+    private void setTitles(String[] titles) {
+        this.titles = titles;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -117,9 +129,9 @@ public class ArticleListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnArticleListFragmentInteractionListener {
+    public interface OnViewPagerFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onArticleListFragmentInteraction(Uri uri);
+        public void onViewPagerFragmentInteraction(Uri uri);
     }
 
 }
