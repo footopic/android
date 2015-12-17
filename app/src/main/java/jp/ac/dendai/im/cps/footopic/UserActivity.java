@@ -25,7 +25,7 @@ import jp.ac.dendai.im.cps.footopic.adapters.RecyclerAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleFragment;
-import jp.ac.dendai.im.cps.footopic.fragments.RecyclerFragment;
+import jp.ac.dendai.im.cps.footopic.fragments.RecyclerViewFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.UserInfoFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.ViewPagerFragment;
 import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
@@ -34,7 +34,7 @@ import jp.ac.dendai.im.cps.footopic.network.DonApiClient;
 
 public class UserActivity extends AppCompatActivity
         implements UserInfoFragment.OnFragmentInteractionListener, OnItemClickListener,
-        ViewPagerFragment.OnViewPagerFragmentInteractionListener, RecyclerFragment.RecyclerViewAction {
+        ViewPagerFragment.OnViewPagerFragmentInteractionListener, RecyclerViewFragment.RecyclerViewAction {
 
     private FragmentManager manager;
     private Handler handler = new Handler();
@@ -90,13 +90,11 @@ public class UserActivity extends AppCompatActivity
                         try {
                             User user = new ObjectMapper().readValue(responseCode, new TypeReference<User>(){});
 
-                            Fragment[] fragments = new Fragment[] {
-                                    UserInfoFragment.newInstance(user),
-                                    RecyclerFragment.newInstance()
-                            };
                             String[] titles = new String[] {"info", "articles"};
+                            int[] fragments = new int[] {
+                                    FragmentEnum.UserInfo.getId(), FragmentEnum.RecyclerView.getId()};
                             manager.beginTransaction()
-                                    .replace(R.id.container, ViewPagerFragment.newInstance(manager, fragments, titles))
+                                    .replace(R.id.container, ViewPagerFragment.newInstance(titles, fragments))
                                     .commit();
 
 //                            progressDialog.dismiss();
@@ -157,7 +155,7 @@ public class UserActivity extends AppCompatActivity
     }
 
     @Override
-    public void onActivityCreatedAction(final RecyclerView recyclerView, final RecyclerFragment fragment) {
+    public void onActivityCreatedAction(final RecyclerView recyclerView, final RecyclerViewFragment fragment) {
 //        progressDialog.show(getSupportFragmentManager(), "DialogFragment");
 
         DonApiClient request = new DonApiClient() {
