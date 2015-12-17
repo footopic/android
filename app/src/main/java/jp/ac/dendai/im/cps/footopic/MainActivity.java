@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
         int[] fragments = new int[] {FragmentEnum.RecyclerView.getId(), FragmentEnum.RecyclerView.getId()};
         manager = getSupportFragmentManager();
         manager.beginTransaction()
-                .replace(R.id.container, ViewPagerFragment.newInstance(titles, fragments))
+                .replace(R.id.container, ViewPagerFragment.newInstance(titles, fragments, null, null))
                 .commit();
     }
 
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onViewPagerFragmentInteraction(Uri uri) {
+    public void onViewPagerFragmentInteraction(Fragment[] fragments) {
         // TODO: listener
     }
 

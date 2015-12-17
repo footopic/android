@@ -42,6 +42,7 @@ public class UserActivity extends AppCompatActivity
     private UserActivity mActivity;
     private Toolbar toolbar;
     private int userId;
+    private static final String PARAM_SERIALIZABLE = "serializable";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,45 +69,17 @@ public class UserActivity extends AppCompatActivity
 
 //        progressDialog.show(getSupportFragmentManager(), "DialogFragment");
 
-        DonApiClient request = new DonApiClient() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                Log.e("onFailure", "dame", e.fillInStackTrace());
-//                progressDialog.dismiss();
-                Toast.makeText(getApplicationContext(), "ユーザーを読み込めませんでした\nresponse: " + request.body().toString(), Toast.LENGTH_SHORT);
-            }
+        String[] titles = new String[] {"info", "articles"};
+        int[] fragments = new int[] {
+                FragmentEnum.UserInfo.getId(), FragmentEnum.RecyclerView.getId()};
+        String userid_key = "user_id";
+        String[] bundleKeys = new String[] {userid_key, ""};
+        Bundle bundle = new Bundle();
+        bundle.putInt(userid_key, userId);
 
-            @Override
-            public void onResponse(Response response) throws IOException {
-                final String responseCode = response.body().string();
-
-                Log.d("onPostCompleted", "ok");
-                Log.d("onPostCompleted", responseCode);
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-                            User user = new ObjectMapper().readValue(responseCode, new TypeReference<User>(){});
-
-                            String[] titles = new String[] {"info", "articles"};
-                            int[] fragments = new int[] {
-                                    FragmentEnum.UserInfo.getId(), FragmentEnum.RecyclerView.getId()};
-                            manager.beginTransaction()
-                                    .replace(R.id.container, ViewPagerFragment.newInstance(titles, fragments))
-                                    .commit();
-
-//                            progressDialog.dismiss();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        };
-
-        request.getUser(userId);
+        manager.beginTransaction()
+                .replace(R.id.container, ViewPagerFragment.newInstance(titles, fragments, bundleKeys, bundle))
+                .commit();
 
     }
 
@@ -146,8 +119,7 @@ public class UserActivity extends AppCompatActivity
     }
 
     @Override
-    public void onViewPagerFragmentInteraction(Uri uri) {
-
+    public void onViewPagerFragmentInteraction(final Fragment[] fragments) {
     }
 
     @Override
