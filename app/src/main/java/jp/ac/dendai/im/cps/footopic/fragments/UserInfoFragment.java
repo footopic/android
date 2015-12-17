@@ -25,11 +25,17 @@ import jp.ac.dendai.im.cps.footopic.entities.User;
 public class UserInfoFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    private User user;
+    private static final String PARAM_SCREEN_NAME = "screen_name";
+    private static final String PARAM_NAME = "name";
+    private static final String PARAM_IMAGE_URL = "image";
 
     public static UserInfoFragment newInstance(User user) {
+        Bundle bundle = new Bundle();
+        bundle.putString(PARAM_NAME, user.getName());
+        bundle.putString(PARAM_SCREEN_NAME, user.getScreen_name());
+        bundle.putString(PARAM_IMAGE_URL, user.getImage().getUrl());
         UserInfoFragment fragment = new UserInfoFragment();
-        fragment.setUser(user);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -48,10 +54,10 @@ public class UserInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_user_info, container, false);
 
-        Uri uri = Uri.parse(user.getImage().getUrl());
+        Uri uri = Uri.parse(getArguments().getString(PARAM_IMAGE_URL));
         ((SimpleDraweeView) v.findViewById(R.id.user_detail_thumb)).setImageURI(uri);
-        ((TextView) v.findViewById(R.id.user_detail_screen_name)).setText(user.getScreen_name());
-        ((TextView) v.findViewById(R.id.user_detail_name)).setText(user.getName());
+        ((TextView) v.findViewById(R.id.user_detail_screen_name)).setText(getArguments().getString(PARAM_SCREEN_NAME));
+        ((TextView) v.findViewById(R.id.user_detail_name)).setText(getArguments().getString(PARAM_NAME));
 
         return v;
     }
@@ -78,10 +84,6 @@ public class UserInfoFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    private void setUser(User user) {
-        this.user = user;
     }
 
     /**
