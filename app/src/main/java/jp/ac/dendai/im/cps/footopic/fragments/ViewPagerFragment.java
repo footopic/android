@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import jp.ac.dendai.im.cps.footopic.FragmentEnum;
 import jp.ac.dendai.im.cps.footopic.R;
 import jp.ac.dendai.im.cps.footopic.adapters.DonFragmentPagerAdapter;
 
@@ -26,19 +26,22 @@ import jp.ac.dendai.im.cps.footopic.adapters.DonFragmentPagerAdapter;
  */
 public class ViewPagerFragment extends Fragment {
 
-    private FragmentManager manager;
     private OnViewPagerFragmentInteractionListener mListener;
     private Fragment[] fragments;
     private String[] titles;
 
+    private static final String PARAM_TITLES = "titles";
+    private static final String PARAM_FRAGMENTS = "fragments";
+
     /**
      * @return A new instance of fragment ArticleListFragment.
      */
-    public static ViewPagerFragment newInstance(FragmentManager manager, Fragment[] fragments, String[] titles) {
+    public static ViewPagerFragment newInstance(String[] titles, int[] fragments) {
         ViewPagerFragment fragment = new ViewPagerFragment();
-        fragment.setFragmentManager(manager);
-        fragment.setFragments(fragments);
-        fragment.setTitles(titles);
+        Bundle args = new Bundle();
+        args.putStringArray(PARAM_TITLES, titles);
+        args.putIntArray(PARAM_FRAGMENTS, fragments);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -50,8 +53,12 @@ public class ViewPagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
+            int[] fragmentsKey = getArguments().getIntArray(PARAM_FRAGMENTS);
+            fragments = new Fragment[fragmentsKey.length];
+            for (int i = 0; i < fragments.length; i++) {
+                fragments[i] = FragmentEnum.getEmptyInstance(fragmentsKey[i]);
+            }
+            titles = getArguments().getStringArray(PARAM_TITLES);
         }
     }
 
@@ -97,26 +104,11 @@ public class ViewPagerFragment extends Fragment {
     private void initPager(View v) {
         final ViewPager viewPager = (ViewPager) v.findViewById(R.id.pager);
 
-        final DonFragmentPagerAdapter adapter = new DonFragmentPagerAdapter(manager, fragments, titles);
+        final DonFragmentPagerAdapter adapter = new DonFragmentPagerAdapter(getFragmentManager(), fragments, titles);
         viewPager.setAdapter(adapter);
 
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) v.findViewById(R.id.tab_strip);
         tabs.setViewPager(viewPager);
-    }
-
-    /**
-     * @param manager
-     */
-    private void setFragmentManager(FragmentManager manager) {
-        this.manager = manager;
-    }
-
-    private void setFragments(Fragment[] fragments) {
-        this.fragments = fragments;
-    }
-
-    private void setTitles(String[] titles) {
-        this.titles = titles;
     }
 
     /**

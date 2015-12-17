@@ -23,7 +23,7 @@ import jp.ac.dendai.im.cps.footopic.utils.DividerItemDecoration;
 /**
  * Articlesページの {@link Fragment}
  */
-public class RecyclerFragment extends Fragment implements OnItemClickListener {
+public class RecyclerViewFragment extends Fragment implements OnItemClickListener {
     private Activity mActivity = null;
     private OnItemClickListener mListener;
     private RecyclerViewAction mActionListener;
@@ -32,14 +32,14 @@ public class RecyclerFragment extends Fragment implements OnItemClickListener {
 
     private RecyclerView mRecyclerView = null;
     private RecyclerAdapter mRecyclerAdapter = null;
-    private RecyclerFragment mFragment;
+    private RecyclerViewFragment mFragment;
 
-    public static RecyclerFragment newInstance() {
-        RecyclerFragment recyclerFragment = new RecyclerFragment();
-        return recyclerFragment;
+    public static RecyclerViewFragment newInstance() {
+        RecyclerViewFragment recyclerViewFragment = new RecyclerViewFragment();
+        return recyclerViewFragment;
     }
 
-    public RecyclerFragment() {}
+    public RecyclerViewFragment() {}
 
     @Override
     public void onAttach(Activity activity) {
@@ -96,6 +96,6 @@ public class RecyclerFragment extends Fragment implements OnItemClickListener {
 
     public interface RecyclerViewAction {
         public void onLoadMoreAction(RecyclerView recyclerView, int current_page);
-        public void onActivityCreatedAction(RecyclerView recyclerView, RecyclerFragment fragment);
+        public void onActivityCreatedAction(RecyclerView recyclerView, RecyclerViewFragment fragment);
     }
 }
