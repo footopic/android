@@ -2,6 +2,8 @@ package jp.ac.dendai.im.cps.footopic.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 import jp.ac.dendai.im.cps.footopic.R;
 import jp.ac.dendai.im.cps.footopic.utils.App;
 
@@ -10,7 +12,7 @@ import jp.ac.dendai.im.cps.footopic.utils.App;
  * サムネイルの画像のURLの構造
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class Image {
+public class Image implements Serializable {
     private String url;
     private String thumb_url;
 

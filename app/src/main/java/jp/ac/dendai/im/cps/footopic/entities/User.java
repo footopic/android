@@ -2,12 +2,14 @@ package jp.ac.dendai.im.cps.footopic.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 /**
  * Created by naoya on 15/12/11.
  * Userの構造
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class User {
+public class User implements Serializable {
     private int id;
     private String created_at;
     private String updated_at;
