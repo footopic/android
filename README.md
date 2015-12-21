@@ -5,8 +5,18 @@
 開発はDevelopブランチで行っている。  
 DonAPIのURLは直接聞いてください
 
-## TARGET SDK VERSION 23
-## MIN SDK VERSION 16
+## SDK VERSION
+|TARGET SDK|MIN SDK|
+|:--------:|:-----:|
+|23        |16     |
+
+
+## デバック＆アプリ配布
+デバッグ＆アプリ配布はDeployGateを利用しています。
+以下のリンクから飛べます。  
+[https://dply.me/7j0vr8](https://dply.me/7j0vr8)  
+バグ報告はSlackの #dev_don_android にお願いします。
+
 
 ## 使用しているライブラリ
 * [PagerSlidingTabStrip](https://github.com/jpardogo/PagerSlidingTabStrip)
