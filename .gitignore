@@ -59,6 +59,3 @@ client_secret.json
 
 # keystore
 keystore/
-
-# curl 
-send_deploy.sh
