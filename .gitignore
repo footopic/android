@@ -58,4 +58,4 @@ app/build/
 client_secret.json
 
 # keystore
-keystore/
+# keystore/
