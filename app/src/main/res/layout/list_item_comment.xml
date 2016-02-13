@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/list_item_padding"
+    android:paddingTop="@dimen/list_item_padding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:fresco="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/comment_item_thumb"
+            android:layout_width="@dimen/thumb_small_size"
+            android:layout_height="@dimen/thumb_small_size"
+            />
+
+        <TextView
+            android:id="@+id/comment_user"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_common_size"
+            android:layout_marginLeft="@dimen/material_text_margin"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/comment_time"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_small_size"
+            android:layout_gravity="right|bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/comment"
+        android:textSize="@dimen/text_large_size"
+        android:layout_marginTop="@dimen/list_item_padding"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
