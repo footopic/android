@@ -5,20 +5,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import jp.ac.dendai.im.cps.footopic.R;
-import jp.ac.dendai.im.cps.footopic.adapters.CommentListAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
-import jp.ac.dendai.im.cps.footopic.utils.App;
 import us.feras.mdv.MarkdownView;
 
 
@@ -31,6 +26,7 @@ public class ArticleFragment extends Fragment {
     private static final String PARAM_USER_IMAGE_URL = "user_image_url";
     private static final String PARAM_USER_SCREEN_NAME = "user_screen_name";
     private static final String PARAM_USER_NAME = "user_name";
+
 
     /**
      * @param article ArticleBean
