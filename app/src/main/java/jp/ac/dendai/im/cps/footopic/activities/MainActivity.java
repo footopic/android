@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic;
+package jp.ac.dendai.im.cps.footopic.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.ac.dendai.im.cps.footopic.FragmentEnum;
+import jp.ac.dendai.im.cps.footopic.R;
 import jp.ac.dendai.im.cps.footopic.adapters.RecyclerAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RecyclerViewFragment.RecyclerViewAction,
         ViewPagerFragment.OnViewPagerFragmentInteractionListener, OnItemClickListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
     private FragmentManager manager;
     private Toolbar toolbar;
     private Handler handler = new Handler();

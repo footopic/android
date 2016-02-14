@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic;
+package jp.ac.dendai.im.cps.footopic.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -21,6 +21,8 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.Arrays;
 
+import jp.ac.dendai.im.cps.footopic.FragmentEnum;
+import jp.ac.dendai.im.cps.footopic.R;
 import jp.ac.dendai.im.cps.footopic.adapters.RecyclerAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
