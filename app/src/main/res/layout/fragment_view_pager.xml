@@ -4,21 +4,25 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
-    <com.astuetz.PagerSlidingTabStrip
+    <!--<com.astuetz.PagerSlidingTabStrip-->
+        <!--android:id="@+id/tab_strip"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="48dp"-->
+        <!--android:textSize="@dimen/text_large_size"-->
+        <!--app:pstsShouldExpand="true"-->
+        <!--app:pstsDividerColor="@android:color/transparent"-->
+        <!--app:pstsIndicatorHeight="2dp"-->
+        <!--app:pstsIndicatorColor="@color/theme_color"-->
+        <!--app:pstsTabBackground="@android:color/transparent"-->
+        <!--app:pstsUnderlineHeight="2dp"-->
+        <!--app:pstsUnderlineColor="@color/pager_color" />-->
+
+    <android.support.design.widget.TabLayout
         android:id="@+id/tab_strip"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:textSize="@dimen/text_large_size"
-        app:pstsShouldExpand="true"
-        app:pstsDividerColor="@android:color/transparent"
-        app:pstsIndicatorHeight="2dp"
-        app:pstsIndicatorColor="@color/theme_color"
-        app:pstsTabBackground="@android:color/transparent"
-        app:pstsUnderlineHeight="2dp"
-        app:pstsUnderlineColor="@color/pager_color" />
-
+        android:layout_height="wrap_content" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

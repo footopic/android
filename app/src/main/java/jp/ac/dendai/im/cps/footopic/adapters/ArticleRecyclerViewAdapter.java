@@ -29,7 +29,7 @@ import jp.ac.dendai.im.cps.footopic.listeners.OnItemClickListener;
  * Created by naoya on 15/12/11.
  * RecyclerViewのアダプター
  */
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecyclerViewAdapter.ViewHolder> {
 
     private LayoutInflater mInflater;
     private Context mContext;
@@ -40,7 +40,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      * RecyclerViewのアダプター
      * @param context
      */
-    public RecyclerAdapter(Context context, OnItemClickListener listener) {
+    public ArticleRecyclerViewAdapter(Context context, OnItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
         this.sortedList = new SortedList<>(Article.class, new SortedListCallback(this));
@@ -48,12 +48,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
-    public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ArticleRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(mInflater.inflate(R.layout.list_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ArticleRecyclerViewAdapter.ViewHolder holder, final int position) {
         // データ表示
         if (sortedList != null && sortedList.size() > position && sortedList.get(position) != null) {
             Article article = sortedList.get(position);

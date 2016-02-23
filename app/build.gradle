@@ -21,8 +21,8 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
-    signingConfigs{
-        debug{
+    signingConfigs {
+        debug {
             storeFile file("keystore/debug.keystore")
             storePassword "android"
             keyAlias "androiddebugkey"
@@ -44,12 +44,13 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.+'
-    compile 'com.android.support:support-v4:+'
-    compile 'com.android.support:design:+'
-    compile 'com.android.support:recyclerview-v7:+'
 
 
+
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.jpardogo.materialtabstrip:library:+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.4@jar'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.4@jar'
@@ -57,7 +58,6 @@ dependencies {
     compile 'com.facebook.fresco:fresco:+'
     compile 'us.feras.mdv:markdownview:1.1.0'
     compile 'com.squareup.okhttp:okhttp:2.7.+'
-
     compile 'com.google.android.gms:play-services-plus:+'
     compile 'com.google.oauth-client:google-oauth-client-jetty:+'
     compile 'com.google.apis:google-api-services-oauth2:+'
