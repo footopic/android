@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic;
+package jp.ac.dendai.im.cps.footopic.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -30,10 +30,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.ac.dendai.im.cps.footopic.adapters.RecyclerAdapter;
+import jp.ac.dendai.im.cps.footopic.FragmentEnum;
+import jp.ac.dendai.im.cps.footopic.R;
+import jp.ac.dendai.im.cps.footopic.adapters.ArticleRecyclerViewAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
-import jp.ac.dendai.im.cps.footopic.fragments.ArticleFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.RecyclerViewFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.ViewPagerFragment;
 import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RecyclerViewFragment.RecyclerViewAction,
         ViewPagerFragment.OnViewPagerFragmentInteractionListener, OnItemClickListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
     private FragmentManager manager;
     private Toolbar toolbar;
     private Handler handler = new Handler();
@@ -236,37 +237,44 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemClick(int id, OnChildItemClickListener.ItemType type) {
         if (type ==  OnChildItemClickListener.ItemType.Article) {
-            DonApiClient client = new DonApiClient() {
-                @Override
-                public void onFailure(Request request, IOException e) {
-                    Log.e("onFailure", "dame", e.fillInStackTrace());
-                }
+//            DonApiClient client = new DonApiClient() {
+//                @Override
+//                public void onFailure(Request request, IOException e) {
+//                    Log.e("onFailure", "dame", e.fillInStackTrace());
+//                }
+//
+//                @Override
+//                public void onResponse(Response response) throws IOException {
+//                    final String responseCode = response.body().string();
+//
+//                    Log.d("onPostCompleted", "ok");
+//                    Log.d("onPostCompleted", responseCode);
+//
+//                    Log.d("onPostCompleter", response.request().toString());
+//
+//                    handler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                Article article = new ObjectMapper().readValue(responseCode, new TypeReference<Article>(){});
+//                                fragmentReplace(ArticleFragment.newInstance(article));
+//
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    });
+//                }
+//            };
+//
+//            client.getArticle(id);
 
-                @Override
-                public void onResponse(Response response) throws IOException {
-                    final String responseCode = response.body().string();
+            Log.d("Activity onItemClick", "article id: " + String.valueOf(id));
 
-                    Log.d("onPostCompleted", "ok");
-                    Log.d("onPostCompleted", responseCode);
-
-                    Log.d("onPostCompleter", response.request().toString());
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Article article = new ObjectMapper().readValue(responseCode, new TypeReference<Article>(){});
-                                fragmentReplace(ArticleFragment.newInstance(article));
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            };
-
-            client.getArticle(id);
+            // Supply num input as an argument.
+            Intent intent = new Intent(MainActivity.this, ArticleActivity.class);
+            intent.putExtra("article_id", id);
+            startActivity(intent);
 
         } else if (type == OnChildItemClickListener.ItemType.Member) {
 //            toolbar.setNavigationIcon(R.drawable.ic_navigation_back);
@@ -310,7 +318,7 @@ public class MainActivity extends AppCompatActivity
 
                         try {
                             ArrayList<Article> articles = new ObjectMapper().readValue(responseCode, new TypeReference<List<Article>>(){});
-                            ((RecyclerAdapter) recyclerView.getAdapter()).addDataOf(articles);
+                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(articles);
 
 //                            progressDialog.dismiss();
                         } catch (IOException e) {
@@ -350,12 +358,12 @@ public class MainActivity extends AppCompatActivity
                         try {
                             ArrayList<Article> arrays = new ObjectMapper().readValue(responseCode, new TypeReference<List<Article>>(){});
                             // ListViewと同じ
-                            RecyclerAdapter adapter = new RecyclerAdapter(mActivity, fragment);
+                            ArticleRecyclerViewAdapter adapter = new ArticleRecyclerViewAdapter(mActivity, fragment);
 
                             recyclerView.setAdapter(adapter);
 
-                            ((RecyclerAdapter) recyclerView.getAdapter()).clearData();
-                            ((RecyclerAdapter) recyclerView.getAdapter()).addDataOf(arrays);
+                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).clearData();
+                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(arrays);
 
 //                            progressDialog.dismiss();
                         } catch (IOException e) {

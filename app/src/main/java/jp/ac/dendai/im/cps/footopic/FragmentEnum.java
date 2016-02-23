@@ -26,6 +26,26 @@ public enum FragmentEnum {
         return id;
     }
 
+    public Fragment getMyEmptyInstance() {
+        switch (id) {
+            case 0: {
+                return new ArticleFragment();
+            }
+            case 1: {
+                return new RecyclerViewFragment();
+            }
+            case 2: {
+                return new UserInfoFragment();
+            }
+            case 3: {
+                return new ViewPagerFragment();
+            }
+            default: {
+                return null;
+            }
+        }
+    }
+
     public static Fragment getEmptyInstance(int id) {
         switch (id) {
             case 0: {

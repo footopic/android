@@ -20,6 +20,7 @@ import us.feras.mdv.MarkdownView;
 public class ArticleFragment extends Fragment {
 
     private static final String PARAM_TITLE = "title";
+    private static final String PARAM_TEXT = "text";
     private static final String PARAM_TAGS = "tags";
     private static final String PARAM_CREATED_AT = "created_at";
 
@@ -35,6 +36,7 @@ public class ArticleFragment extends Fragment {
     public static ArticleFragment newInstance(Article article) {
         Bundle bundle = new Bundle();
         bundle.putString(PARAM_TITLE, article.getTitle());
+        bundle.putString(PARAM_TEXT, article.getText());
         bundle.putStringArray(PARAM_TAGS, article.getTags());
         bundle.putString(PARAM_CREATED_AT, article.getCreated_at());
 
@@ -56,29 +58,31 @@ public class ArticleFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Bundle bundle = getArguments();
-
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_article, container, false);
-        TextView name = (TextView) v.findViewById(R.id.detail_name_text);
-        TextView title = (TextView) v.findViewById(R.id.detail_title_text);
-        TextView tags = (TextView) v.findViewById(R.id.detail_tags_text);
 
-        Uri uri = Uri.parse(bundle.getString(PARAM_USER_IMAGE_URL));
-        SimpleDraweeView draweeView = (SimpleDraweeView) v.findViewById(R.id.detail_thumb);
-        draweeView.setImageURI(uri);
+        if (getArguments() != null) {
+            Bundle bundle = getArguments();
 
-        String time = bundle.getString(PARAM_CREATED_AT);
-        name.setText(bundle.getString(PARAM_USER_NAME) + " が " + time + " に投稿");
-        title.setText(bundle.getString(PARAM_TITLE));
+            // Inflate the layout for this fragment
+            TextView name = (TextView) v.findViewById(R.id.detail_name_text);
+            TextView title = (TextView) v.findViewById(R.id.detail_title_text);
+            TextView tags = (TextView) v.findViewById(R.id.detail_tags_text);
 
-        tags.setText(TextUtils.join(" ", bundle.getStringArray(PARAM_TAGS)));
+            Uri uri = Uri.parse(bundle.getString(PARAM_USER_IMAGE_URL));
+            SimpleDraweeView draweeView = (SimpleDraweeView) v.findViewById(R.id.detail_thumb);
+            draweeView.setImageURI(uri);
 
-        MarkdownView mdView = (MarkdownView) v.findViewById(R.id.markdownView);
-        mdView.loadMarkdown(bundle.getString(PARAM_TITLE));
+            String time = bundle.getString(PARAM_CREATED_AT);
+            name.setText(bundle.getString(PARAM_USER_NAME) + " が " + time + " に投稿");
+            title.setText(bundle.getString(PARAM_TITLE));
+
+            tags.setText(TextUtils.join(" ", bundle.getStringArray(PARAM_TAGS)));
+
+            MarkdownView mdView = (MarkdownView) v.findViewById(R.id.markdownView);
+            mdView.loadMarkdown(bundle.getString(PARAM_TEXT));
+        }
 
         return v;
     }
