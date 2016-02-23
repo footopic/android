@@ -57,29 +57,31 @@ public class ArticleFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Bundle bundle = getArguments();
-
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_article, container, false);
-        TextView name = (TextView) v.findViewById(R.id.detail_name_text);
-        TextView title = (TextView) v.findViewById(R.id.detail_title_text);
-        TextView tags = (TextView) v.findViewById(R.id.detail_tags_text);
 
-        Uri uri = Uri.parse(bundle.getString(PARAM_USER_IMAGE_URL));
-        SimpleDraweeView draweeView = (SimpleDraweeView) v.findViewById(R.id.detail_thumb);
-        draweeView.setImageURI(uri);
+        if (getArguments() != null) {
+            Bundle bundle = getArguments();
 
-        String time = bundle.getString(PARAM_CREATED_AT);
-        name.setText(bundle.getString(PARAM_USER_NAME) + " が " + time + " に投稿");
-        title.setText(bundle.getString(PARAM_TITLE));
+            // Inflate the layout for this fragment
+            TextView name = (TextView) v.findViewById(R.id.detail_name_text);
+            TextView title = (TextView) v.findViewById(R.id.detail_title_text);
+            TextView tags = (TextView) v.findViewById(R.id.detail_tags_text);
 
-        tags.setText(TextUtils.join(" ", bundle.getStringArray(PARAM_TAGS)));
+            Uri uri = Uri.parse(bundle.getString(PARAM_USER_IMAGE_URL));
+            SimpleDraweeView draweeView = (SimpleDraweeView) v.findViewById(R.id.detail_thumb);
+            draweeView.setImageURI(uri);
 
-        MarkdownView mdView = (MarkdownView) v.findViewById(R.id.markdownView);
-        mdView.loadMarkdown(bundle.getString(PARAM_TEXT));
+            String time = bundle.getString(PARAM_CREATED_AT);
+            name.setText(bundle.getString(PARAM_USER_NAME) + " が " + time + " に投稿");
+            title.setText(bundle.getString(PARAM_TITLE));
+
+            tags.setText(TextUtils.join(" ", bundle.getStringArray(PARAM_TAGS)));
+
+            MarkdownView mdView = (MarkdownView) v.findViewById(R.id.markdownView);
+            mdView.loadMarkdown(bundle.getString(PARAM_TEXT));
+        }
 
         return v;
     }

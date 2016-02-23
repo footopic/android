@@ -2,6 +2,7 @@ package jp.ac.dendai.im.cps.footopic.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ public class ViewPagerFragment extends Fragment {
 
     private OnViewPagerFragmentInteractionListener mListener;
     private Fragment[] fragments;
+    private Fragment[] emptyFragments;
     private String[] titles;
 
     private static final String PARAM_TITLES = "titles";
@@ -71,12 +73,14 @@ public class ViewPagerFragment extends Fragment {
 
             titles = getArguments().getStringArray(PARAM_TITLES);
             fragments = new Fragment[fragmentsKey.length];
+            emptyFragments = new Fragment[fragmentsKey.length];
             String[] bundleKey = getArguments().getStringArray(PARAM_BUNDLE_KEYS);
             Bundle outArgs = getArguments().getBundle(PARAM_BUNDLE);
 
             for (int i = 0; i < fragments.length; i++) {
                 Bundle args = new Bundle();
                 fragments[i] = FragmentEnum.getEmptyInstance(fragmentsKey[i]);
+                emptyFragments[i] = FragmentEnum.getEmptyInstance(fragmentsKey[i]);
 
                 if (bundleKey != null) {
                     args.putInt(PARAM_ID, outArgs.getInt(bundleKey[i]));
@@ -124,8 +128,10 @@ public class ViewPagerFragment extends Fragment {
         final DonFragmentPagerAdapter adapter = new DonFragmentPagerAdapter(getFragmentManager(), fragments, titles);
         viewPager.setAdapter(adapter);
 
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) v.findViewById(R.id.tab_strip);
-        tabs.setViewPager(viewPager);
+//        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) v.findViewById(R.id.tab_strip);
+//        tabs.setViewPager(viewPager);
+        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab_strip);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     /**
