@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import jp.ac.dendai.im.cps.footopic.FragmentEnum;
 import jp.ac.dendai.im.cps.footopic.R;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
@@ -30,7 +29,7 @@ import jp.ac.dendai.im.cps.footopic.listeners.OnItemClickListener;
  * Created by naoya on 15/12/11.
  * RecyclerViewのアダプター
  */
-public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecyclerAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private LayoutInflater mInflater;
     private Context mContext;
@@ -41,7 +40,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
      * RecyclerViewのアダプター
      * @param context
      */
-    public ArticleRecyclerAdapter(Context context, OnItemClickListener listener) {
+    public RecyclerViewAdapter(Context context, OnItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
         this.sortedList = new SortedList<>(Article.class, new SortedListCallback(this));
@@ -49,12 +48,12 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
     }
 
     @Override
-    public ArticleRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(mInflater.inflate(R.layout.list_item_article, parent, false));
+    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(mInflater.inflate(R.layout.list_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final ArticleRecyclerAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerViewAdapter.ViewHolder holder, final int position) {
         // データ表示
         if (sortedList != null && sortedList.size() > position && sortedList.get(position) != null) {
             Article article = sortedList.get(position);
@@ -93,16 +92,6 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         } else {
             return 0;
         }
-    }
-
-    /**
-     * Listに入っているFragmentのTypeを返す
-     * @param position なんでもいい
-     * @return FragmentEnum
-     */
-    @Override
-    public int getItemViewType(int position) {
-        return FragmentEnum.Article.getId();
     }
 
     /**

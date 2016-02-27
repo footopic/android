@@ -85,16 +85,6 @@
                 android:layout_height="1px"
                 android:background="@color/divider_color" />
 
-            <ListView
-                android:id="@+id/comment_list"
-                android:layout_marginRight="@dimen/material_text_margin"
-                android:layout_marginLeft="@dimen/material_text_margin"
-                android:footerDividersEnabled="true"
-                android:headerDividersEnabled="true"
-                android:divider="@color/divider_color"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

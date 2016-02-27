@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -20,63 +19,50 @@ import java.util.Date;
 import java.util.List;
 
 import jp.ac.dendai.im.cps.footopic.R;
-import jp.ac.dendai.im.cps.footopic.entities.Article;
+import jp.ac.dendai.im.cps.footopic.entities.Comment;
 import jp.ac.dendai.im.cps.footopic.entities.User;
-import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
-import jp.ac.dendai.im.cps.footopic.listeners.OnItemClickListener;
 
 /**
  * Created by naoya on 15/12/11.
  * RecyclerViewのアダプター
  */
-public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecyclerViewAdapter.ViewHolder> {
+public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecyclerAdapter.ViewHolder> {
 
     private LayoutInflater mInflater;
     private Context mContext;
-    private SortedList<Article> sortedList;
-    private OnItemClickListener mListener;
+    private SortedList<Comment> sortedList;
 
     /**
      * RecyclerViewのアダプター
      * @param context
      */
-    public ArticleRecyclerViewAdapter(Context context, OnItemClickListener listener) {
+    public CommentRecyclerAdapter(Context context) {
         this.mInflater = LayoutInflater.from(context);
         this.mContext = context;
-        this.sortedList = new SortedList<>(Article.class, new SortedListCallback(this));
-        this.mListener = listener;
+        this.sortedList = new SortedList<>(Comment.class, new SortedListCallback(this));
     }
 
     @Override
-    public ArticleRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(mInflater.inflate(R.layout.list_item, parent, false));
+    public CommentRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(mInflater.inflate(R.layout.list_item_comment, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final ArticleRecyclerViewAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final CommentRecyclerAdapter.ViewHolder holder, final int position) {
         // データ表示
         if (sortedList != null && sortedList.size() > position && sortedList.get(position) != null) {
-            Article article = sortedList.get(position);
+            Comment comment = sortedList.get(position);
 
-            Log.d("onBindViewHolder", article.toString());
+            Log.d("onBindViewHolder", comment.toString());
 
-            User user = article.getUser();
+            User user = comment.getUser();
 
             Uri uri = Uri.parse(user.getImage().getThumb_url());
             holder.thumb.setImageURI(uri);
-            holder.thumb.setOnClickListener(new OnChildItemClickListener(mListener, OnChildItemClickListener.ItemType.Member, user.getId()));
 
-            String time = article.getCreated_at();
-            holder.name.setText(user.getScreen_name() + " が " + time + " に投稿");
-            holder.title.setText(article.getTitle());
-
-            String tags = "";
-            for (String str : article.getTags()) {
-                tags += str + " ";
-            }
-            holder.tags.setText(tags);
-
-            holder.layout.setOnClickListener(new OnChildItemClickListener(mListener, OnChildItemClickListener.ItemType.Article, article.getId()));
+            String time = comment.getCreated_at();
+            holder.name.setText(user.getScreen_name() + " が " + time + " にコメント");
+            holder.comment_text.setText(comment.getText());
         }
     }
 
@@ -98,13 +84,13 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
      * データ追加
      * @param dataList 追加するデータリスト {@link List}
      */
-    public void addDataOf(List<Article> dataList) {
+    public void addDataOf(List<Comment> dataList) {
         sortedList.addAll(dataList);
     }
 
-    public void removeDataOf(List<Article> dataList) {
+    public void removeDataOf(List<Comment> dataList) {
         sortedList.beginBatchedUpdates();
-        for (Article data : dataList) {
+        for (Comment data : dataList) {
             sortedList.remove(data);
         }
         sortedList.endBatchedUpdates();
@@ -121,7 +107,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
      * 現在のデータリススト取得
      * @return 現在のデータリスト {@link SortedList}
      */
-    public SortedList<Article> getList() {
+    public SortedList<Comment> getList() {
         return sortedList;
     }
 
@@ -132,22 +118,19 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
     class ViewHolder extends RecyclerView.ViewHolder {
         SimpleDraweeView thumb;
         TextView name;
-        TextView title;
-        TextView tags;
-        LinearLayout layout;
-
+        TextView comment_text;
+        TextView comment;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            thumb = (SimpleDraweeView) itemView.findViewById(R.id.thumb);
-            name = (TextView) itemView.findViewById(R.id.name_text);
-            title = (TextView) itemView.findViewById(R.id.title_text);
-            tags = (TextView) itemView.findViewById(R.id.tags_text);
-            layout = (LinearLayout) itemView.findViewById(R.id.list_item_text_container);
+            thumb = (SimpleDraweeView) itemView.findViewById(R.id.comment_item_thumb);
+            name = (TextView) itemView.findViewById(R.id.comment_user);
+            comment_text = (TextView) itemView.findViewById(R.id.comment_text);
+            comment = (TextView) itemView.findViewById(R.id.comment);
         }
     }
 
-    private static class SortedListCallback extends SortedList.Callback<Article> {
+    private static class SortedListCallback extends SortedList.Callback<Comment> {
         private RecyclerView.Adapter adapter;
 
         public SortedListCallback(@NonNull RecyclerView.Adapter adapter) {
@@ -155,7 +138,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
         }
 
         @Override
-        public int compare(Article o1, Article o2) {
+        public int compare(Comment o1, Comment o2) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 Date date1 = sdf.parse(o1.getCreated_at());
@@ -190,7 +173,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
         }
 
         @Override
-        public boolean areContentsTheSame(Article oldItem, Article newItem) {
+        public boolean areContentsTheSame(Comment oldItem, Comment newItem) {
             String oldText = oldItem.getText();
             if (oldText == null) {
                 return newItem.getText() == null;
@@ -199,7 +182,7 @@ public class ArticleRecyclerViewAdapter extends RecyclerView.Adapter<ArticleRecy
         }
 
         @Override
-        public boolean areItemsTheSame(Article item1, Article item2) {
+        public boolean areItemsTheSame(Comment item1, Comment item2) {
             return item1.getId() == item2.getId();
         }
     }

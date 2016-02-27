@@ -1,48 +1,60 @@
 package jp.ac.dendai.im.cps.footopic.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import java.io.IOException;
-
 import jp.ac.dendai.im.cps.footopic.R;
 import jp.ac.dendai.im.cps.footopic.adapters.DonFragmentPagerAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
-import jp.ac.dendai.im.cps.footopic.network.DonApiClient;
+import jp.ac.dendai.im.cps.footopic.entities.Image;
+import jp.ac.dendai.im.cps.footopic.entities.User;
 
-public class ArticlePagerFragment extends Fragment {
+public class ArticlePagerFragment extends Fragment implements CommentFragment.OnCommentFragmentInteractionListener {
 
     private static final String TAG = ArticlePagerFragment.class.getSimpleName();
 
-    private OnFragmentInteractionListener mListener;
+    private OnArticlePagerInteractionListener mListener;
 
-    private static final String PARAM_ARTICLE_ID = "article_id";
-    private int paramArticleId;
-    private Handler handler = new Handler();
+    private static final String PARAM_TITLE = "title";
+    private static final String PARAM_TEXT = "text";
+    private static final String PARAM_TAGS = "tags";
+    private static final String PARAM_CREATED_AT = "created_at";
+    private static final String PARAM_USER_IMAGE_URL = "user_image_url";
+    private static final String PARAM_USER_SCREEN_NAME = "user_screen_name";
+    private static final String PARAM_USER_NAME = "user_name";
+
+    private String title;
+    private String text;
+    private String[] tags;
+    private String createdAt;
+    private String userName;
+    private String userScreenName;
+    private String userImageUrl;
+    private Article article;
 
     public ArticlePagerFragment() {
         // Required empty public constructor
     }
 
-    public static ArticlePagerFragment newInstance(int articleId) {
+    public static ArticlePagerFragment newInstance(Article article) {
         ArticlePagerFragment fragment = new ArticlePagerFragment();
-        Bundle args = new Bundle();
-        args.putInt(PARAM_ARTICLE_ID, articleId);
-        fragment.setArguments(args);
+        Bundle bundle = new Bundle();
+        bundle.putString(PARAM_TITLE, article.getTitle());
+        bundle.putString(PARAM_TEXT, article.getText());
+        bundle.putStringArray(PARAM_TAGS, article.getTags());
+        bundle.putString(PARAM_CREATED_AT, article.getCreated_at());
+
+        bundle.putString(PARAM_USER_NAME, article.getUser().getName());
+        bundle.putString(PARAM_USER_SCREEN_NAME, article.getUser().getScreen_name());
+        bundle.putString(PARAM_USER_IMAGE_URL, article.getUser().getImage().getUrl());
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -50,7 +62,13 @@ public class ArticlePagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            paramArticleId = getArguments().getInt(PARAM_ARTICLE_ID);
+            title = getArguments().getString(PARAM_TITLE);
+            text = getArguments().getString(PARAM_TEXT);
+            tags = getArguments().getStringArray(PARAM_TAGS);
+            createdAt = getArguments().getString(PARAM_CREATED_AT);
+            userName = getArguments().getString(PARAM_USER_NAME);
+            userScreenName = getArguments().getString(PARAM_USER_SCREEN_NAME);
+            userImageUrl = getArguments().getString(PARAM_USER_IMAGE_URL);
         }
     }
 
@@ -61,53 +79,43 @@ public class ArticlePagerFragment extends Fragment {
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
 
-        DonApiClient client = new DonApiClient() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                Log.e(TAG, "onFailure: dame", e.fillInStackTrace());
-            }
+        article = new Article();
+        article.setTitle(title);
+        article.setText(text);
+        article.setTags(tags);
+        article.setCreated_at(createdAt);
+        User user = new User();
+        user.setName(userName);
+        user.setScreen_name(userScreenName);
+        Image image = new Image();
+        image.setUrl(userImageUrl);
+        image.setThumb_url(userImageUrl);
+        user.setImage(image);
+        article.setUser(user);
 
-            @Override
-            public void onResponse(Response response) throws IOException {
-                final String responseCode = response.body().string();
+        ArticleFragment articleFragment = ArticleFragment.newInstance(article);
+        CommentFragment commentFragment = CommentFragment.newInstance();
 
-                Log.d(TAG, "onPostCompleted ok");
-                Log.d(TAG, responseCode);
+        String[] titles = new String[] {"article", "comment"};
+        Fragment[] fragments = new Fragment[] {articleFragment, commentFragment};
+        final DonFragmentPagerAdapter adapter = new DonFragmentPagerAdapter(getActivity().getSupportFragmentManager(), fragments, titles);
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
 
-                Article article = new ObjectMapper().readValue(responseCode, new TypeReference<Article>() {
-                });
-                ArticleFragment articleFragment = new ArticleFragment().newInstance(article);
-                ArticleFragment articleFragment2 = new ArticleFragment().newInstance(article);
-
-//                String[] titles = new String[] {"article", "comment", "edit"};
-//                Fragment[] fragments = new Fragment[] {articleFragment, articleFragment, articleFragment};
-                String[] titles = new String[] {"article", "article"};
-                Fragment[] fragments = new Fragment[] {articleFragment, articleFragment2};
-                final DonFragmentPagerAdapter adapter = new DonFragmentPagerAdapter(getActivity().getSupportFragmentManager(), fragments, titles);
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewPager.setAdapter(adapter);
-                        tabLayout.setupWithViewPager(viewPager);
-                    }
-                });
-            }
-        };
-        client.getArticle(paramArticleId);
-
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
         return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        if (context instanceof OnArticlePagerInteractionListener) {
+            mListener = (OnArticlePagerInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -116,18 +124,13 @@ public class ArticlePagerFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
+    @Override
+    public void onActivityCreated(RecyclerView recyclerView) {
+        mListener.onArticlePagerInteraction();
+    }
+
+    public interface OnArticlePagerInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onArticlePagerInteraction();
     }
 }

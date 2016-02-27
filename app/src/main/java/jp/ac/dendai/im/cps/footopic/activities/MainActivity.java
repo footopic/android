@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -32,16 +31,16 @@ import java.util.List;
 
 import jp.ac.dendai.im.cps.footopic.FragmentEnum;
 import jp.ac.dendai.im.cps.footopic.R;
-import jp.ac.dendai.im.cps.footopic.adapters.ArticleRecyclerViewAdapter;
+import jp.ac.dendai.im.cps.footopic.adapters.RecyclerViewAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
+import jp.ac.dendai.im.cps.footopic.utils.MyProgressDialogFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.RecyclerViewFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.ViewPagerFragment;
 import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
 import jp.ac.dendai.im.cps.footopic.listeners.OnItemClickListener;
 import jp.ac.dendai.im.cps.footopic.network.DonApiClient;
 import jp.ac.dendai.im.cps.footopic.utils.App;
-import jp.ac.dendai.im.cps.footopic.utils.SpinningProgressDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RecyclerViewFragment.RecyclerViewAction,
@@ -52,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     private Toolbar toolbar;
     private Handler handler = new Handler();
     private MainActivity mActivity;
+    private MyProgressDialogFragment mProgressDialog;
 //    private final SpinningProgressDialog progressDialog = SpinningProgressDialog.newInstance("Loading...", "記事を読み込んでいます。");
 
     @Override
@@ -295,13 +295,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoadMoreAction(final RecyclerView recyclerView, int current_page) {
         Log.d("onLoadMore", String.valueOf(current_page));
-//        progressDialog.show(getSupportFragmentManager(), "DialogFragment");
 
         DonApiClient request = new DonApiClient() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Log.e("onFailure", "dame", e.fillInStackTrace());
-//                progressDialog.dismiss();
                 Toast.makeText(mActivity, "記事を読み込めませんでした\nresponse: " + request.body().toString(), Toast.LENGTH_SHORT);
             }
 
@@ -318,9 +316,7 @@ public class MainActivity extends AppCompatActivity
 
                         try {
                             ArrayList<Article> articles = new ObjectMapper().readValue(responseCode, new TypeReference<List<Article>>(){});
-                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(articles);
-
-//                            progressDialog.dismiss();
+                            ((RecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(articles);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -334,13 +330,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onActivityCreatedAction(final RecyclerView recyclerView, final RecyclerViewFragment fragment) {
-//        progressDialog.show(getSupportFragmentManager(), "DialogFragment");
+        mProgressDialog = MyProgressDialogFragment.newInstance("", "loading...");
+        mProgressDialog.show(getSupportFragmentManager(), "load");
 
         DonApiClient request = new DonApiClient() {
             @Override
             public void onFailure(Request request, IOException e) {
                 Log.e("onFailure", "dame", e.fillInStackTrace());
-//                progressDialog.dismiss();
+                mProgressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), "記事を読み込めませんでした\nresponse: " + request.body().toString(), Toast.LENGTH_SHORT);
             }
 
@@ -350,6 +347,7 @@ public class MainActivity extends AppCompatActivity
 
                 Log.d("onPostCompleted", "ok");
                 Log.d("onPostCompleted", responseCode);
+                mProgressDialog.dismiss();
 
                 handler.post(new Runnable() {
                     @Override
@@ -358,14 +356,13 @@ public class MainActivity extends AppCompatActivity
                         try {
                             ArrayList<Article> arrays = new ObjectMapper().readValue(responseCode, new TypeReference<List<Article>>(){});
                             // ListViewと同じ
-                            ArticleRecyclerViewAdapter adapter = new ArticleRecyclerViewAdapter(mActivity, fragment);
+                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(mActivity, fragment);
 
                             recyclerView.setAdapter(adapter);
 
-                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).clearData();
-                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(arrays);
+                            ((RecyclerViewAdapter) recyclerView.getAdapter()).clearData();
+                            ((RecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(arrays);
 
-//                            progressDialog.dismiss();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -375,21 +372,5 @@ public class MainActivity extends AppCompatActivity
         };
 
         request.getRecentArticleList(true);
-    }
-
-    void showDialog(String title, String message) {
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        // Create and show the dialog.
-        DialogFragment newFragment = SpinningProgressDialog.newInstance(title, message);
-        newFragment.show(ft, "dialog");
     }
 }
