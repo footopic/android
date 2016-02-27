@@ -31,10 +31,10 @@ import java.util.List;
 
 import jp.ac.dendai.im.cps.footopic.FragmentEnum;
 import jp.ac.dendai.im.cps.footopic.R;
-import jp.ac.dendai.im.cps.footopic.adapters.ArticleRecyclerViewAdapter;
+import jp.ac.dendai.im.cps.footopic.adapters.RecyclerViewAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
-import jp.ac.dendai.im.cps.footopic.fragments.MyProgressDialogFragment;
+import jp.ac.dendai.im.cps.footopic.utils.MyProgressDialogFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.RecyclerViewFragment;
 import jp.ac.dendai.im.cps.footopic.fragments.ViewPagerFragment;
 import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity
 
                         try {
                             ArrayList<Article> articles = new ObjectMapper().readValue(responseCode, new TypeReference<List<Article>>(){});
-                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(articles);
+                            ((RecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(articles);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -356,12 +356,12 @@ public class MainActivity extends AppCompatActivity
                         try {
                             ArrayList<Article> arrays = new ObjectMapper().readValue(responseCode, new TypeReference<List<Article>>(){});
                             // ListViewと同じ
-                            ArticleRecyclerViewAdapter adapter = new ArticleRecyclerViewAdapter(mActivity, fragment);
+                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(mActivity, fragment);
 
                             recyclerView.setAdapter(adapter);
 
-                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).clearData();
-                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(arrays);
+                            ((RecyclerViewAdapter) recyclerView.getAdapter()).clearData();
+                            ((RecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(arrays);
 
                         } catch (IOException e) {
                             e.printStackTrace();

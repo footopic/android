@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import jp.ac.dendai.im.cps.footopic.R;
-import jp.ac.dendai.im.cps.footopic.adapters.ArticleRecyclerViewAdapter;
+import jp.ac.dendai.im.cps.footopic.adapters.RecyclerViewAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.listeners.BottomLoadListener;
 import jp.ac.dendai.im.cps.footopic.listeners.OnChildItemClickListener;
@@ -31,7 +31,7 @@ public class RecyclerViewFragment extends Fragment implements OnItemClickListene
     private ArrayList<Article> articles;
 
     private RecyclerView mRecyclerView = null;
-    private ArticleRecyclerViewAdapter mArticleRecyclerViewAdapter = null;
+    private RecyclerViewAdapter mRecyclerViewAdapter = null;
     private RecyclerViewFragment mFragment;
 
     public static RecyclerViewFragment newInstance() {

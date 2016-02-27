@@ -1,4 +1,4 @@
-package jp.ac.dendai.im.cps.footopic.fragments;
+package jp.ac.dendai.im.cps.footopic.utils;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;

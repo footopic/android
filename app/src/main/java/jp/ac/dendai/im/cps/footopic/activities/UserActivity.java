@@ -23,7 +23,7 @@ import java.util.Arrays;
 
 import jp.ac.dendai.im.cps.footopic.FragmentEnum;
 import jp.ac.dendai.im.cps.footopic.R;
-import jp.ac.dendai.im.cps.footopic.adapters.ArticleRecyclerViewAdapter;
+import jp.ac.dendai.im.cps.footopic.adapters.RecyclerViewAdapter;
 import jp.ac.dendai.im.cps.footopic.entities.Article;
 import jp.ac.dendai.im.cps.footopic.entities.User;
 import jp.ac.dendai.im.cps.footopic.fragments.ArticleFragment;
@@ -154,12 +154,12 @@ public class UserActivity extends AppCompatActivity
                         try {
                             User user = new ObjectMapper().readValue(responseCode, new TypeReference<User>(){});
                             // ListViewと同じ
-                            ArticleRecyclerViewAdapter adapter = new ArticleRecyclerViewAdapter(mActivity, fragment);
+                            RecyclerViewAdapter adapter = new RecyclerViewAdapter(mActivity, fragment);
 
                             recyclerView.setAdapter(adapter);
 
-                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).clearData();
-                            ((ArticleRecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(Arrays.asList(user.getRecent_articles()));
+                            ((RecyclerViewAdapter) recyclerView.getAdapter()).clearData();
+                            ((RecyclerViewAdapter) recyclerView.getAdapter()).addDataOf(Arrays.asList(user.getRecent_articles()));
 
 //                            progressDialog.dismiss();
                         } catch (IOException e) {
