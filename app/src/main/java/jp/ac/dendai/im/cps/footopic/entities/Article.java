@@ -3,6 +3,7 @@ package jp.ac.dendai.im.cps.footopic.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Created by naoya on 15/12/11.
@@ -16,8 +17,11 @@ public class Article implements Serializable {
     private String title;
     private String text;
     private String[] tags;
-    private Article[] comments;
+    private Comment[] comments;
     private User user;
+    private History[] histories;
+    private int star_count;
+    private User[] stars;
 
     public int getId() {
         return id;
@@ -25,6 +29,10 @@ public class Article implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPlaneCreated_at() {
+        return created_at;
     }
 
     public String getCreated_at() {
@@ -67,11 +75,11 @@ public class Article implements Serializable {
         this.tags = tags;
     }
 
-    public Article[] getComments() {
+    public Comment[] getComments() {
         return comments;
     }
 
-    public void setComments(Article[] comments) {
+    public void setComments(Comment[] comments) {
         this.comments = comments;
     }
 
@@ -83,21 +91,44 @@ public class Article implements Serializable {
         this.user = user;
     }
 
+    public History[] getHistories() {
+        return histories;
+    }
+
+    public void setHistories(History[] histories) {
+        this.histories = histories;
+    }
+
+    public int getStar_count() {
+        return star_count;
+    }
+
+    public void setStar_count(int star_count) {
+        this.star_count = star_count;
+    }
+
+    public User[] getStars() {
+        return stars;
+    }
+
     @Override
     public String toString() {
-        String str = "id: " + id + "\n" +
-                ", created_at: " + created_at + "\n" +
-                ", updated_at: " + updated_at + "\n" +
-                ", title: " + title + "\n" +
-                ", text: " + text + "\n" +
-                ", tags: " + tags + "\n" +
-                ", user: " + user.toString() + "\n";
+        return "Article{" +
+                "id=" + id +
+                ", created_at='" + created_at + '\'' +
+                ", updated_at='" + updated_at + '\'' +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", tags=" + Arrays.toString(tags) +
+                ", comments=" + Arrays.toString(comments) +
+                ", user=" + user +
+                ", histories=" + Arrays.toString(histories) +
+                ", star_count=" + star_count +
+                ", stars=" + Arrays.toString(stars) +
+                '}';
+    }
 
-        if (comments == null) {
-            str +=  ", comments: " + 0;
-        } else {
-            str +=  ", comments: " + comments.length;
-        }
-        return str;
+    public void setStars(User[] stars) {
+        this.stars = stars;
     }
 }

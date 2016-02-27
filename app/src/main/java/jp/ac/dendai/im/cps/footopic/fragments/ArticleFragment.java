@@ -38,7 +38,7 @@ public class ArticleFragment extends Fragment {
         bundle.putString(PARAM_TITLE, article.getTitle());
         bundle.putString(PARAM_TEXT, article.getText());
         bundle.putStringArray(PARAM_TAGS, article.getTags());
-        bundle.putString(PARAM_CREATED_AT, article.getCreated_at());
+        bundle.putString(PARAM_CREATED_AT, article.getPlaneCreated_at());
 
         bundle.putString(PARAM_USER_NAME, article.getUser().getName());
         bundle.putString(PARAM_USER_SCREEN_NAME, article.getUser().getScreen_name());
